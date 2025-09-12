@@ -54,10 +54,6 @@ class IOrganizationService(Protocol):
         pass
 
     @abstractmethod
-    async def get_organization_by_employee_id(self, employee_id: int) -> model.Organization:
-        pass
-
-    @abstractmethod
     async def get_all_organizations(self) -> list[model.Organization]:
         pass
 
@@ -87,10 +83,6 @@ class IOrganizationRepo(Protocol):
 
     @abstractmethod
     async def get_organization_by_id(self, organization_id: int) -> list[model.Organization]:
-        pass
-
-    @abstractmethod
-    async def get_organization_by_employee_id(self, employee_id: int) -> list[model.Organization]:
         pass
 
     @abstractmethod

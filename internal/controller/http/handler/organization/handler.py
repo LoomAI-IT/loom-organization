@@ -98,32 +98,7 @@ class OrganizationController(interface.IOrganizationController):
                 attributes={"employee_id": employee_id}
         ) as span:
             try:
-                authorization_data = request.state.authorization_data
-                account_id = authorization_data.account_id
-
-                if account_id == 0:
-                    raise HTTPException(status_code=401, detail="Unauthorized")
-
-                self.logger.info("Get organization by employee ID request", {
-                    "account_id": account_id,
-                    "employee_id": employee_id
-                })
-
-                organization = await self.organization_service.get_organization_by_employee_id(employee_id)
-
-                self.logger.info("Organization retrieved by employee ID successfully", {
-                    "account_id": account_id,
-                    "employee_id": employee_id
-                })
-
-                span.set_status(Status(StatusCode.OK))
-                return JSONResponse(
-                    status_code=200,
-                    content={
-                        "message": "Organization retrieved successfully",
-                        "organization": organization.to_dict()
-                    }
-                )
+                pass
 
             except Exception as err:
                 span.record_exception(err)

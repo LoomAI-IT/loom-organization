@@ -53,24 +53,6 @@ class OrganizationService(interface.IOrganizationService):
                 span.set_status(Status(StatusCode.ERROR, str(e)))
                 raise
 
-    async def get_organization_by_employee_id(self, employee_id: int) -> model.Organization:
-        with self.tracer.start_as_current_span(
-                "OrganizationService.get_organization_by_employee_id",
-                kind=SpanKind.INTERNAL,
-                attributes={"employee_id": employee_id}
-        ) as span:
-            try:
-
-                organization = (await self.organization_repo.get_organization_by_employee_id(employee_id))[0]
-
-                span.set_status(Status(StatusCode.OK))
-                return organization
-
-            except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
-                raise
-
     async def get_all_organizations(self) -> list[model.Organization]:
         with self.tracer.start_as_current_span(
                 "OrganizationService.get_all_organizations",
