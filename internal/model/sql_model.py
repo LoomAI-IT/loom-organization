@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS organizations (
     
     name TEXT NOT NULL,
     autoposting_moderation BOOLEAN DEFAULT TRUE,
-    publication_text_end_sample TEXT,
+    publication_text_end_sample TEXT DEFAULT '',
     video_cut_description_end_sample TEXT DEFAULT '',
 
     
