@@ -2,24 +2,26 @@ from abc import abstractmethod
 from typing import Protocol
 
 from fastapi.responses import JSONResponse
+from fastapi import Request
 
 from internal import model
+from internal.controller.http.handler.organization.model import *
 
 
 class IOrganizationController(Protocol):
     @abstractmethod
     async def create_organization(
             self,
-            name: str
+            body: CreateOrganizationBody
     ) -> JSONResponse:
         pass
 
     @abstractmethod
-    async def get_organization_by_id(self, organization_id: int) -> JSONResponse:
+    async def get_organization_by_id(self, request: Request,  organization_id: int) -> JSONResponse:
         pass
 
     @abstractmethod
-    async def get_organization_by_employee_id(self, employee_id: int) -> JSONResponse:
+    async def get_organization_by_employee_id(self, request: Request, employee_id: int) -> JSONResponse:
         pass
 
     @abstractmethod
@@ -29,11 +31,8 @@ class IOrganizationController(Protocol):
     @abstractmethod
     async def update_organization(
             self,
-            organization_id: int,
-            name: str = None,
-            autoposting_moderation: bool = None,
-            video_cut_description_end_sample: str = None,
-            publication_text_end_sample: str = None,
+            request: Request,
+            body: UpdateOrganizationBody
     ) -> JSONResponse:
         pass
 
@@ -56,7 +55,7 @@ class IOrganizationService(Protocol):
         pass
 
     @abstractmethod
-    async def get_organization_by_employee_id(self, employee_id: int) -> JSONResponse:
+    async def get_organization_by_employee_id(self, employee_id: int) -> model.Organization:
         pass
 
     @abstractmethod
@@ -93,7 +92,7 @@ class IOrganizationRepo(Protocol):
         pass
 
     @abstractmethod
-    async def get_organization_by_employee_id(self, employee_id: int) -> JSONResponse:
+    async def get_organization_by_employee_id(self, employee_id: int) -> model.Organization:
         pass
 
     @abstractmethod
