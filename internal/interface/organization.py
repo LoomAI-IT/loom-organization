@@ -31,7 +31,9 @@ class IOrganizationController(Protocol):
             self,
             organization_id: int,
             name: str = None,
-            autoposting_moderation: bool = None
+            autoposting_moderation: bool = None,
+            video_cut_description_end_sample: str = None,
+            publication_text_end_sample: str = None,
     ) -> JSONResponse:
         pass
 
@@ -66,7 +68,9 @@ class IOrganizationService(Protocol):
             self,
             organization_id: int,
             name: str = None,
-            autoposting_moderation: bool = None
+            autoposting_moderation: bool = None,
+            video_cut_description_end_sample: str = None,
+            publication_text_end_sample: str = None,
     ) -> None:
         pass
 
@@ -101,7 +105,9 @@ class IOrganizationRepo(Protocol):
             self,
             organization_id: int,
             name: str = None,
-            autoposting_moderation: bool = None
+            autoposting_moderation: bool = None,
+            video_cut_description_end_sample: str = None,
+            publication_text_end_sample: str = None,
     ) -> None:
         pass
 
