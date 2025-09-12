@@ -9,7 +9,6 @@ class CreateOrganizationBody(BaseModel):
         json_schema_extra = {
             "example": {
                 "name": "My Organization",
-                "autoposting_moderation": True
             }
         }
 

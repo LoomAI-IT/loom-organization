@@ -32,7 +32,6 @@ class OrganizationController(interface.IOrganizationController):
 
                 organization_id = await self.organization_service.create_organization(
                     name=body.name,
-                    autoposting_moderation=body.autoposting_moderation
                 )
 
                 self.logger.info("Organization created successfully", {

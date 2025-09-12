@@ -45,8 +45,7 @@ class IOrganizationService(Protocol):
     @abstractmethod
     async def create_organization(
             self,
-            name: str,
-            autoposting_moderation: bool = True
+            name: str
     ) -> int:
         pass
 
@@ -83,7 +82,6 @@ class IOrganizationRepo(Protocol):
     async def create_organization(
             self,
             name: str,
-            autoposting_moderation: bool = True
     ) -> int:
         pass
 
@@ -92,7 +90,7 @@ class IOrganizationRepo(Protocol):
         pass
 
     @abstractmethod
-    async def get_organization_by_employee_id(self, employee_id: int) -> model.Organization:
+    async def get_organization_by_employee_id(self, employee_id: int) -> list[model.Organization]:
         pass
 
     @abstractmethod
