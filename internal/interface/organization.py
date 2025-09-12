@@ -1,87 +1,110 @@
-import io
 from abc import abstractmethod
 from typing import Protocol
-from fastapi import Request
+
+from fastapi.responses import JSONResponse
 
 from internal import model
-from internal.controller.http.handler.organization.model import (
-    RegisterBody, LoginBody, SetTwoFaBody, DeleteTwoFaBody,
-    VerifyTwoFaBody, RecoveryPasswordBody, ChangePasswordBody
-)
 
 
-class IAccountController(Protocol):
+class IOrganizationController(Protocol):
     @abstractmethod
-    async def register(self, body: RegisterBody): pass
-
-    @abstractmethod
-    async def login(self, body: LoginBody): pass
-
-    @abstractmethod
-    async def generate_two_fa(self, request: Request): pass
-
-    @abstractmethod
-    async def set_two_fa(self, request: Request, body: SetTwoFaBody): pass
-
-    @abstractmethod
-    async def delete_two_fa(self, request: Request, body: DeleteTwoFaBody): pass
-
-    @abstractmethod
-    async def verify_two_fa(self, request: Request, body: VerifyTwoFaBody): pass
-
-    @abstractmethod
-    async def recovery_password(self, request: Request, body: RecoveryPasswordBody): pass
-
-    @abstractmethod
-    async def change_password(self, request: Request, body: ChangePasswordBody): pass
-
-
-class IAccountService(Protocol):
-    @abstractmethod
-    async def register(self, login: str, password: str) -> model.AuthorizationDataDTO: pass
-
-
-    @abstractmethod
-    async def login(
+    async def create_organization(
             self,
-            login: str,
-            password: str,
-    ) -> model.AuthorizationDataDTO | None: pass
+            name: str
+    ) -> JSONResponse:
+        pass
 
     @abstractmethod
-    async def generate_two_fa_key(self, account_id: int) -> tuple[str, io.BytesIO]: pass
+    async def get_organization_by_id(self, organization_id: int) -> JSONResponse:
+        pass
 
     @abstractmethod
-    async def set_two_fa_key(self, account_id: int, google_two_fa_key: str, google_two_fa_code: str) -> None: pass
+    async def get_organization_by_employee_id(self, employee_id: int) -> JSONResponse:
+        pass
 
     @abstractmethod
-    async def delete_two_fa_key(self, account_id: int, google_two_fa_code: str) -> None: pass
+    async def get_all_organizations(self) -> JSONResponse:
+        pass
 
     @abstractmethod
-    async def verify_two(self, account_id: int, google_two_fa_code: str) -> bool: pass
+    async def update_organization(
+            self,
+            organization_id: int,
+            name: str = None,
+            autoposting_moderation: bool = None
+    ) -> JSONResponse:
+        pass
 
     @abstractmethod
-    async def recovery_password(self, account_id: int, new_password: str) -> None: pass
+    async def delete_organization(self, organization_id: int) -> JSONResponse:
+        pass
+
+
+class IOrganizationService(Protocol):
+    @abstractmethod
+    async def create_organization(
+            self,
+            name: str,
+            autoposting_moderation: bool = True
+    ) -> int:
+        pass
 
     @abstractmethod
-    async def change_password(self, account_id: int, new_password: str, old_password: str) -> None: pass
-
-
-class IAccountRepo(Protocol):
-    @abstractmethod
-    async def create_account(self, login: str, password: str) -> int: pass
+    async def get_organization_by_id(self, organization_id: int) -> model.Organization:
+        pass
 
     @abstractmethod
-    async def account_by_id(self, account_id: int) -> list[model.Account]: pass
+    async def get_organization_by_employee_id(self, employee_id: int) -> JSONResponse:
+        pass
 
     @abstractmethod
-    async def account_by_login(self, login: str) -> list[model.Account]: pass
+    async def get_all_organizations(self) -> list[model.Organization]:
+        pass
 
     @abstractmethod
-    async def set_two_fa_key(self, account_id: int, google_two_fa_key: str) -> None: pass
+    async def update_organization(
+            self,
+            organization_id: int,
+            name: str = None,
+            autoposting_moderation: bool = None
+    ) -> None:
+        pass
 
     @abstractmethod
-    async def delete_two_fa_key(self, account_id: int) -> None: pass
+    async def delete_organization(self, organization_id: int) -> None:
+        pass
+
+
+class IOrganizationRepo(Protocol):
+    @abstractmethod
+    async def create_organization(
+            self,
+            name: str,
+            autoposting_moderation: bool = True
+    ) -> int:
+        pass
 
     @abstractmethod
-    async def update_password(self, account_id: int, new_password: str) -> None: pass
+    async def get_organization_by_id(self, organization_id: int) -> list[model.Organization]:
+        pass
+
+    @abstractmethod
+    async def get_organization_by_employee_id(self, employee_id: int) -> JSONResponse:
+        pass
+
+    @abstractmethod
+    async def get_all_organizations(self) -> list[model.Organization]:
+        pass
+
+    @abstractmethod
+    async def update_organization(
+            self,
+            organization_id: int,
+            name: str = None,
+            autoposting_moderation: bool = None
+    ) -> None:
+        pass
+
+    @abstractmethod
+    async def delete_organization(self, organization_id: int) -> None:
+        pass
