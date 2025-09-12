@@ -1,6 +1,4 @@
 from fastapi import FastAPI
-
-
 from starlette.responses import StreamingResponse
 
 from internal import model, interface
@@ -9,19 +7,21 @@ from internal.controller.http.handler.organization.model import *
 
 def NewHTTP(
         db: interface.IDB,
-        account_controller: interface.IAccountController,
+        organization_controller: interface.IOrganizationController,
         http_middleware: interface.IHttpMiddleware,
         prefix: str
 ):
     app = FastAPI(
+        title="Organization Service API",
+        description="API для управления организациями",
+        version="1.0.0",
         openapi_url=prefix + "/openapi.json",
         docs_url=prefix + "/docs",
         redoc_url=prefix + "/redoc",
     )
     include_middleware(app, http_middleware)
     include_db_handler(app, db, prefix)
-
-    include_account_handlers(app, account_controller, prefix)
+    include_organization_handlers(app, organization_controller, prefix)
 
     return app
 
@@ -30,99 +30,113 @@ def include_middleware(
         app: FastAPI,
         http_middleware: interface.IHttpMiddleware,
 ):
+    # Порядок middleware важен - они применяются в обратном порядке регистрации
     http_middleware.authorization_middleware04(app)
     http_middleware.logger_middleware03(app)
     http_middleware.metrics_middleware02(app)
     http_middleware.trace_middleware01(app)
 
 
-def include_account_handlers(
+def include_organization_handlers(
         app: FastAPI,
-        account_controller: interface.IAccountController,
+        organization_controller: interface.IOrganizationController,
         prefix: str
 ):
-    # Регистрация пользователя
+    # Создание организации
     app.add_api_route(
-        prefix + "/organization/register",
-        account_controller.register,
+        prefix + "/organization",
+        organization_controller.create_organization,
         methods=["POST"],
-        tags=["Account"],
-        response_model=RegisterResponse,
+        tags=["Organization"],
+        response_model=CreateOrganizationResponse,
+        summary="Создать организацию",
+        description="Создает новую организацию с указанным именем"
     )
 
-    # Вход пользователя
+    # Получение организации по ID
     app.add_api_route(
-        prefix + "/organization/login",
-        account_controller.login,
-        methods=["POST"],
-        tags=["Account"],
-        response_model=LoginResponse,
-    )
-
-    # Генерация 2FA QR кода
-    app.add_api_route(
-        prefix + "/organization/2fa/generate",
-        account_controller.generate_two_fa,
+        prefix + "/organization/{organization_id}",
+        organization_controller.get_organization_by_id,
         methods=["GET"],
-        tags=["Account"],
-        response_class=StreamingResponse,
+        tags=["Organization"],
+        response_model=GetOrganizationResponse,
+        summary="Получить организацию по ID",
+        description="Возвращает информацию об организации по её идентификатору"
     )
 
-    # Установка 2FA
+    # Получение организации по ID сотрудника
     app.add_api_route(
-        prefix + "/organization/2fa/set",
-        account_controller.set_two_fa,
-        methods=["POST"],
-        tags=["Account"],
-        response_model=TwoFaResponse,
+        prefix + "/organization/employee/{employee_id}",
+        organization_controller.get_organization_by_employee_id,
+        methods=["GET"],
+        tags=["Organization"],
+        response_model=GetOrganizationResponse,
+        summary="Получить организацию по ID сотрудника",
+        description="Возвращает информацию об организации по ID сотрудника"
     )
 
-    # Удаление 2FA
+    # Получение всех организаций
     app.add_api_route(
-        prefix + "/organization/2fa/delete",
-        account_controller.delete_two_fa,
-        methods=["DELETE"],
-        tags=["Account"],
-        response_model=TwoFaResponse,
+        prefix + "/organizations",
+        organization_controller.get_all_organizations,
+        methods=["GET"],
+        tags=["Organization"],
+        response_model=GetAllOrganizationsResponse,
+        summary="Получить все организации",
+        description="Возвращает список всех организаций"
     )
 
-    # Верификация 2FA
+    # Обновление организации
     app.add_api_route(
-        prefix + "/organization/2fa/verify",
-        account_controller.verify_two_fa,
-        methods=["POST"],
-        tags=["Account"],
-        response_model=VerifyTwoFaResponse,
-    )
-
-    # Восстановление пароля
-    app.add_api_route(
-        prefix + "/organization/password/recovery",
-        account_controller.recovery_password,
-        methods=["POST"],
-        tags=["Account"],
-        response_model=PasswordResponse,
-    )
-
-    # Изменение пароля
-    app.add_api_route(
-        prefix + "/organization/password/change",
-        account_controller.change_password,
+        prefix + "/organization",
+        organization_controller.update_organization,
         methods=["PUT"],
-        tags=["Account"],
-        response_model=PasswordResponse,
+        tags=["Organization"],
+        response_model=UpdateOrganizationResponse,
+        summary="Обновить организацию",
+        description="Обновляет информацию об организации"
+    )
+
+    # Удаление организации
+    app.add_api_route(
+        prefix + "/organization/{organization_id}",
+        organization_controller.delete_organization,
+        methods=["DELETE"],
+        tags=["Organization"],
+        response_model=DeleteOrganizationResponse,
+        summary="Удалить организацию",
+        description="Удаляет организацию по её идентификатору"
     )
 
 
 def include_db_handler(app: FastAPI, db: interface.IDB, prefix: str):
-    app.add_api_route(prefix + "/table/create", create_table_handler(db), methods=["GET"])
-    app.add_api_route(prefix + "/table/drop", drop_table_handler(db), methods=["GET"])
+    """
+    Добавляет служебные эндпоинты для управления базой данных
+    """
+    app.add_api_route(
+        prefix + "/table/create",
+        create_table_handler(db),
+        methods=["GET"],
+        tags=["Database"],
+        summary="Создать таблицы",
+        description="Создает все необходимые таблицы в базе данных"
+    )
+
+    app.add_api_route(
+        prefix + "/table/drop",
+        drop_table_handler(db),
+        methods=["GET"],
+        tags=["Database"],
+        summary="Удалить таблицы",
+        description="Удаляет все таблицы из базы данных"
+    )
 
 
 def create_table_handler(db: interface.IDB):
     async def create_table():
         try:
-            await db.multi_query(model.create_tables_queries)
+            await db.multi_query(model.create_organization_tables_queries)
+            return {"message": "Tables created successfully"}
         except Exception as err:
             raise err
 
@@ -132,7 +146,8 @@ def create_table_handler(db: interface.IDB):
 def drop_table_handler(db: interface.IDB):
     async def drop_table():
         try:
-            await db.multi_query(model.drop_tables_queries)
+            await db.multi_query(model.drop_organization_tables_queries)
+            return {"message": "Tables dropped successfully"}
         except Exception as err:
             raise err
 
