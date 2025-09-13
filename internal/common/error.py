@@ -17,3 +17,8 @@ class ErrOrganizationDelete(Exception):
     def __init__(self, message="Failed to delete organization"):
         self.message = message
         super().__init__(self.message)
+
+class ErrInsufficientBalance(Exception):
+    def __init__(self, message="Insufficient balance"):
+        self.message = message
+        super().__init__(self.message)

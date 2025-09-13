@@ -59,7 +59,7 @@ organization_service = OrganizationService(
 )
 
 # Инициализация контроллеров
-organization_controller = OrganizationController(tel, organization_service)
+organization_controller = OrganizationController(tel, organization_service, cfg.interserver_secret_key)
 
 # Инициализация middleware
 http_middleware = HttpMiddleware(tel, kontur_authorization_client, cfg.prefix)

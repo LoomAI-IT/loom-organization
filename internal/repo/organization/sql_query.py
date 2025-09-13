@@ -28,3 +28,16 @@ delete_organization = """
 DELETE FROM organizations
 WHERE id = :organization_id;
 """
+
+top_up_balance = """
+UPDATE organizations 
+SET rub_balance = rub_balance + :amount_rub
+WHERE id = :organization_id;
+"""
+
+debit_balance = """
+UPDATE organizations 
+SET rub_balance = rub_balance - :amount_rub
+WHERE id = :organization_id 
+  AND rub_balance >= :amount_rub;
+"""

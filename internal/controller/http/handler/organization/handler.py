@@ -4,7 +4,8 @@ from fastapi.responses import JSONResponse
 
 from internal import interface
 from internal.controller.http.handler.organization.model import (
-    CreateOrganizationBody, UpdateOrganizationBody
+    CreateOrganizationBody, UpdateOrganizationBody,
+    TopUpBalanceBody, DebitBalanceBody
 )
 
 
@@ -13,10 +14,12 @@ class OrganizationController(interface.IOrganizationController):
             self,
             tel: interface.ITelemetry,
             organization_service: interface.IOrganizationService,
+            interserver_secret_key: str,
     ):
         self.tracer = tel.tracer()
         self.logger = tel.logger()
         self.organization_service = organization_service
+        self.interserver_secret_key = interserver_secret_key
 
     async def create_organization(self, body: CreateOrganizationBody) -> JSONResponse:
         with self.tracer.start_as_current_span(
@@ -196,6 +199,106 @@ class OrganizationController(interface.IOrganizationController):
                 return JSONResponse(
                     status_code=200,
                     content={"message": "Organization deleted successfully"}
+                )
+
+            except Exception as err:
+                span.record_exception(err)
+                span.set_status(Status(StatusCode.ERROR, str(err)))
+                raise err
+
+    async def top_up_balance(self, body: TopUpBalanceBody) -> JSONResponse:
+        with self.tracer.start_as_current_span(
+                "OrganizationController.top_up_balance",
+                kind=SpanKind.INTERNAL,
+                attributes={
+                    "organization_id": body.organization_id,
+                    "amount_rub": body.amount_rub
+                }
+        ) as span:
+            try:
+                # Проверка межсервисного ключа
+                if body.interserver_secret_key != self.interserver_secret_key:
+                    self.logger.warning("Неверный межсервисный ключ для пополнения баланса", {
+                        "organization_id": body.organization_id
+                    })
+                    raise HTTPException(status_code=403, detail="Invalid interserver secret key")
+
+                if body.amount_rub <= 0:
+                    raise HTTPException(status_code=400, detail="Amount must be greater than 0")
+
+                self.logger.info("Top up balance request", {
+                    "organization_id": body.organization_id,
+                    "amount_rub": body.amount_rub
+                })
+
+                await self.organization_service.top_up_balance(
+                    organization_id=body.organization_id,
+                    amount_rub=body.amount_rub
+                )
+
+                self.logger.info("Balance topped up successfully", {
+                    "organization_id": body.organization_id,
+                    "amount_rub": body.amount_rub
+                })
+
+                span.set_status(Status(StatusCode.OK))
+                return JSONResponse(
+                    status_code=200,
+                    content={
+                        "message": "Balance topped up successfully",
+                        "organization_id": body.organization_id,
+                        "amount_rub": body.amount_rub
+                    }
+                )
+
+            except Exception as err:
+                span.record_exception(err)
+                span.set_status(Status(StatusCode.ERROR, str(err)))
+                raise err
+
+    async def debit_balance(self, body: DebitBalanceBody) -> JSONResponse:
+        with self.tracer.start_as_current_span(
+                "OrganizationController.debit_balance",
+                kind=SpanKind.INTERNAL,
+                attributes={
+                    "organization_id": body.organization_id,
+                    "amount_rub": body.amount_rub
+                }
+        ) as span:
+            try:
+                # Проверка межсервисного ключа
+                if body.interserver_secret_key != self.interserver_secret_key:
+                    self.logger.warning("Неверный межсервисный ключ для списания баланса", {
+                        "organization_id": body.organization_id
+                    })
+                    raise HTTPException(status_code=403, detail="Invalid interserver secret key")
+
+                if body.amount_rub <= 0:
+                    raise HTTPException(status_code=400, detail="Amount must be greater than 0")
+
+                self.logger.info("Debit balance request", {
+                    "organization_id": body.organization_id,
+                    "amount_rub": body.amount_rub
+                })
+
+                await self.organization_service.debit_balance(
+                    organization_id=body.organization_id,
+                    amount_rub=body.amount_rub
+                )
+
+                self.logger.info("Balance debited successfully", {
+                    "organization_id": body.organization_id,
+                    "amount_rub": body.amount_rub
+                })
+
+                span.set_status(Status(StatusCode.OK))
+                return JSONResponse(
+                    status_code=200,
+                    content={
+                        "message": "Balance debited successfully",
+                        "organization_id": body.organization_id,
+                        "amount_rub": body.amount_rub
+                    }
                 )
 
             except Exception as err:

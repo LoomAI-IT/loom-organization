@@ -108,6 +108,26 @@ def include_organization_handlers(
         description="Удаляет организацию по её идентификатору"
     )
 
+    # Пополнение баланса организации
+    app.add_api_route(
+        prefix + "/organization/balance/top-up",
+        organization_controller.top_up_balance,
+        methods=["POST"],
+        tags=["Organization"],
+        summary="Пополнить баланс организации",
+        description="Пополняет баланс организации на указанную сумму (требует межсервисный ключ)"
+    )
+
+    # Списание с баланса организации
+    app.add_api_route(
+        prefix + "/organization/balance/debit",
+        organization_controller.debit_balance,
+        methods=["POST"],
+        tags=["Organization"],
+        summary="Списать с баланса организации",
+        description="Списывает указанную сумму с баланса организации (требует межсервисный ключ)"
+    )
+
 
 def include_db_handler(app: FastAPI, db: interface.IDB, prefix: str):
     """
