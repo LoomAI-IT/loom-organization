@@ -40,6 +40,14 @@ class IOrganizationController(Protocol):
     async def delete_organization(self, organization_id: int) -> JSONResponse:
         pass
 
+    @abstractmethod
+    async def top_up_balance(self, body: TopUpBalanceBody) -> JSONResponse:
+        pass
+
+    @abstractmethod
+    async def debit_balance(self, body: DebitBalanceBody) -> JSONResponse:
+        pass
+
 
 class IOrganizationService(Protocol):
     @abstractmethod
@@ -72,6 +80,14 @@ class IOrganizationService(Protocol):
     async def delete_organization(self, organization_id: int) -> None:
         pass
 
+    @abstractmethod
+    async def top_up_balance(self, organization_id: int, amount_rub: int) -> None:
+        pass
+
+    @abstractmethod
+    async def debit_balance(self, organization_id: int, amount_rub: int) -> None:
+        pass
+
 
 class IOrganizationRepo(Protocol):
     @abstractmethod
@@ -102,4 +118,12 @@ class IOrganizationRepo(Protocol):
 
     @abstractmethod
     async def delete_organization(self, organization_id: int) -> None:
+        pass
+
+    @abstractmethod
+    async def top_up_balance(self, organization_id: int, amount_rub: int) -> None:
+        pass
+
+    @abstractmethod
+    async def debit_balance(self, organization_id: int, amount_rub: int) -> None:
         pass

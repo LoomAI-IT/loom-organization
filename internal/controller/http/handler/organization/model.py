@@ -31,6 +31,13 @@ class UpdateOrganizationBody(BaseModel):
             }
         }
 
+class TopUpBalanceBody(BaseModel):
+    organization_id: int
+    amount_rub: int
+
+class DebitBalanceBody(BaseModel):
+    organization_id: int
+    amount_rub: int
 
 # Response models
 class CreateOrganizationResponse(BaseModel):

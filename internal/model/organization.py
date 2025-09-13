@@ -9,6 +9,7 @@ class Organization:
     id: int
 
     name: str
+    rub_balance: int
     autoposting_moderation: bool
     video_cut_description_end_sample: str
     publication_text_end_sample: str
@@ -21,6 +22,7 @@ class Organization:
             cls(
                 id=row.id,
                 name=row.name,
+                rub_balance=row.rub_balance,
                 autoposting_moderation=row.autoposting_moderation,
                 video_cut_description_end_sample=row.video_cut_description_end_sample,
                 publication_text_end_sample=row.publication_text_end_sample,
@@ -33,6 +35,7 @@ class Organization:
         return {
             "id": self.id,
             "name": self.name,
+            "rub_balance": self.rub_balance,
             "autoposting_moderation": self.autoposting_moderation,
             "video_cut_description_end_sample": self.video_cut_description_end_sample,
             "publication_text_end_sample": self.publication_text_end_sample,
