@@ -109,8 +109,9 @@ SpanID: <code>{span_id}</code>"""
                     messages=history,
                     temperature=0.3,
                 )
+            print(f"{response=}", flush=True)
             llm_response = response.choices[0].message.content
             return llm_response
 
         except Exception as err:
-            pass
+            print(err, flush=True)
