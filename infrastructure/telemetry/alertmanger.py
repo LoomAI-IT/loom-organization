@@ -58,8 +58,8 @@ class AlertManager:
         trace_link = f"{self.grafana_url}/explore?schemaVersion=1&panes=%7B%220pz%22:%7B%22datasource%22:%22tempo%22,%22queries%22:%5B%7B%22refId%22:%22A%22,%22datasource%22:%7B%22type%22:%22tempo%22,%22uid%22:%22tempo%22%7D,%22queryType%22:%22traceql%22,%22limit%22:20,%22tableType%22:%22traces%22,%22metricsQueryType%22:%22range%22,%22query%22:%22{trace_id}%22%7D%5D,%22range%22:%7B%22from%22:%22now-2d%22,%22to%22:%22now%22%7D%7D%7D&orgId=1"
 
         text = f"""Произошла ошибка в сервисе: <b>{self.service_name}</b>
-TraceID: <code>{trace_id}</code>
-SpanID: <code>{span_id}</code>"""
+TraceID: {trace_id}
+SpanID: {span_id}"""
 
         if self.openai_client is not None:
             try:
@@ -78,7 +78,6 @@ SpanID: <code>{span_id}</code>"""
         await self.bot.send_message(
             self.alert_tg_chat_id,
             text,
-            parse_mode="HTML",
             message_thread_id=self.alert_tg_chat_thread_id,
             reply_markup=keyboard
         )
