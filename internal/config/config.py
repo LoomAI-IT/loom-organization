@@ -16,7 +16,7 @@ class Config:
 
         # Настройки базы данных PostgreSQL
         self.db_host = os.getenv("KONTUR_ORGANIZATION_POSTGRES_CONTAINER_NAME", "localhost")
-        self.db_port = os.getenv("KONTUR_ORGANIZATION_POSTGRES_PORT", "5432")
+        self.db_port = "5432"
         self.db_name = os.getenv("KONTUR_ORGANIZATION_POSTGRES_DB_NAME", "hr_interview")
         self.db_user = os.getenv("KONTUR_ORGANIZATION_POSTGRES_USER", "postgres")
         self.db_pass = os.getenv("KONTUR_ORGANIZATION_POSTGRES_PASSWORD", "password")
