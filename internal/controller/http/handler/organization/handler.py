@@ -64,14 +64,12 @@ class OrganizationController(interface.IOrganizationController):
             try:
 
                 self.logger.info("Get organization by ID request", {
-                    "account_id": account_id,
                     "organization_id": organization_id
                 })
 
                 organization = await self.organization_service.get_organization_by_id(organization_id)
 
                 self.logger.info("Organization retrieved successfully", {
-                    "account_id": account_id,
                     "organization_id": organization_id
                 })
 
@@ -128,7 +126,6 @@ class OrganizationController(interface.IOrganizationController):
             try:
 
                 self.logger.info("Update organization request", {
-                    "account_id": account_id,
                 })
 
                 await self.organization_service.update_organization(
@@ -140,7 +137,6 @@ class OrganizationController(interface.IOrganizationController):
                 )
 
                 self.logger.info("Organization updated successfully", {
-                    "account_id": account_id
                 })
 
                 span.set_status(Status(StatusCode.OK))
