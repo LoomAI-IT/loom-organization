@@ -62,11 +62,6 @@ class OrganizationController(interface.IOrganizationController):
                 attributes={"organization_id": organization_id}
         ) as span:
             try:
-                authorization_data = request.state.authorization_data
-                account_id = authorization_data.account_id
-
-                if account_id == 0:
-                    raise HTTPException(status_code=401, detail="Unauthorized")
 
                 self.logger.info("Get organization by ID request", {
                     "account_id": account_id,
@@ -131,11 +126,6 @@ class OrganizationController(interface.IOrganizationController):
                 attributes={"organization_id": body.organization_id}
         ) as span:
             try:
-                authorization_data = request.state.authorization_data
-                account_id = authorization_data.account_id
-
-                if account_id == 0:
-                    raise HTTPException(status_code=401, detail="Unauthorized")
 
                 self.logger.info("Update organization request", {
                     "account_id": account_id,
