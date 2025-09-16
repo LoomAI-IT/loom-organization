@@ -94,19 +94,6 @@ class OrganizationController(interface.IOrganizationController):
                 span.set_status(Status(StatusCode.ERROR, str(err)))
                 raise err
 
-    async def get_organization_by_employee_id(self, request: Request, employee_id: int) -> JSONResponse:
-        with self.tracer.start_as_current_span(
-                "OrganizationController.get_organization_by_employee_id",
-                kind=SpanKind.INTERNAL,
-                attributes={"employee_id": employee_id}
-        ) as span:
-            try:
-                pass
-
-            except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
-                raise err
 
     async def get_all_organizations(self) -> JSONResponse:
         with self.tracer.start_as_current_span(

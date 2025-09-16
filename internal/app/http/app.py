@@ -64,17 +64,6 @@ def include_organization_handlers(
         description="Возвращает информацию об организации по её идентификатору"
     )
 
-    # Получение организации по ID сотрудника
-    app.add_api_route(
-        prefix + "/organization/employee/{employee_id}",
-        organization_controller.get_organization_by_employee_id,
-        methods=["GET"],
-        tags=["Organization"],
-        response_model=GetOrganizationResponse,
-        summary="Получить организацию по ID сотрудника",
-        description="Возвращает информацию об организации по ID сотрудника"
-    )
-
     # Получение всех организаций
     app.add_api_route(
         prefix + "/organizations",

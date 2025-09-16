@@ -21,10 +21,6 @@ class IOrganizationController(Protocol):
         pass
 
     @abstractmethod
-    async def get_organization_by_employee_id(self, request: Request, employee_id: int) -> JSONResponse:
-        pass
-
-    @abstractmethod
     async def get_all_organizations(self) -> JSONResponse:
         pass
 
