@@ -76,10 +76,7 @@ class OrganizationController(interface.IOrganizationController):
                 span.set_status(Status(StatusCode.OK))
                 return JSONResponse(
                     status_code=200,
-                    content={
-                        "message": "Organization retrieved successfully",
-                        "organization": organization.to_dict()
-                    }
+                    content=organization.to_dict()
                 )
 
             except Exception as err:
