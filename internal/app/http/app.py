@@ -44,7 +44,7 @@ def include_organization_handlers(
 ):
     # Создание организации
     app.add_api_route(
-        prefix + "/organization",
+        prefix + "/create",
         organization_controller.create_organization,
         methods=["POST"],
         tags=["Organization"],
@@ -55,7 +55,7 @@ def include_organization_handlers(
 
     # Получение организации по ID
     app.add_api_route(
-        prefix + "/organization/{organization_id}",
+        prefix + "/{organization_id}",
         organization_controller.get_organization_by_id,
         methods=["GET"],
         tags=["Organization"],
@@ -66,7 +66,7 @@ def include_organization_handlers(
 
     # Получение всех организаций
     app.add_api_route(
-        prefix + "/organizations",
+        prefix + "/all",
         organization_controller.get_all_organizations,
         methods=["GET"],
         tags=["Organization"],
@@ -77,7 +77,7 @@ def include_organization_handlers(
 
     # Обновление организации
     app.add_api_route(
-        prefix + "/organization",
+        prefix + "",
         organization_controller.update_organization,
         methods=["PUT"],
         tags=["Organization"],
@@ -88,7 +88,7 @@ def include_organization_handlers(
 
     # Удаление организации
     app.add_api_route(
-        prefix + "/organization/{organization_id}",
+        prefix + "/{organization_id}",
         organization_controller.delete_organization,
         methods=["DELETE"],
         tags=["Organization"],
@@ -99,7 +99,7 @@ def include_organization_handlers(
 
     # Пополнение баланса организации
     app.add_api_route(
-        prefix + "/organization/balance/top-up",
+        prefix + "/balance/top-up",
         organization_controller.top_up_balance,
         methods=["POST"],
         tags=["Organization"],
@@ -109,7 +109,7 @@ def include_organization_handlers(
 
     # Списание с баланса организации
     app.add_api_route(
-        prefix + "/organization/balance/debit",
+        prefix + "/balance/debit",
         organization_controller.debit_balance,
         methods=["POST"],
         tags=["Organization"],
