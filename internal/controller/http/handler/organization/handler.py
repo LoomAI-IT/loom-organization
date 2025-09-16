@@ -25,12 +25,12 @@ class OrganizationController(interface.IOrganizationController):
         with self.tracer.start_as_current_span(
                 "OrganizationController.create_organization",
                 kind=SpanKind.INTERNAL,
-                attributes={"name": body.name}
+                attributes={"org_name": body.name}
         ) as span:
             try:
 
                 self.logger.info("Create organization request", {
-                    "name": body.name
+                    "org_name": body.name
                 })
 
                 organization_id = await self.organization_service.create_organization(

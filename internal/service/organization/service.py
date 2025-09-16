@@ -17,7 +17,7 @@ class OrganizationService(interface.IOrganizationService):
         with self.tracer.start_as_current_span(
                 "OrganizationService.create_organization",
                 kind=SpanKind.INTERNAL,
-                attributes={"name": name}
+                attributes={"org_name": name}
         ) as span:
             try:
                 organization_id = await self.organization_repo.create_organization(
