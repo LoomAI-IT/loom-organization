@@ -168,10 +168,10 @@ class OrganizationService(interface.IOrganizationService):
                 if not organizations:
                     raise common.ErrOrganizationNotFound()
 
-                # Проверяем, что у организации достаточно средств
-                current_balance = organizations[0].rub_balance
-                if current_balance < amount_rub:
-                    raise common.ErrInsufficientBalance()
+                # # Проверяем, что у организации достаточно средств
+                # current_balance = organizations[0].rub_balance
+                # if current_balance < amount_rub:
+                #     raise common.ErrInsufficientBalance()
 
                 await self.organization_repo.debit_balance(
                     organization_id=organization_id,
