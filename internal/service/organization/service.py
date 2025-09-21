@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from opentelemetry.trace import Status, StatusCode, SpanKind
 
 from internal import interface, model, common
@@ -124,7 +126,7 @@ class OrganizationService(interface.IOrganizationService):
                 span.set_status(Status(StatusCode.ERROR, str(e)))
                 raise
 
-    async def top_up_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         with self.tracer.start_as_current_span(
                 "OrganizationService.top_up_balance",
                 kind=SpanKind.INTERNAL,
@@ -151,7 +153,7 @@ class OrganizationService(interface.IOrganizationService):
                 span.set_status(Status(StatusCode.ERROR, str(e)))
                 raise
 
-    async def debit_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         with self.tracer.start_as_current_span(
                 "OrganizationService.debit_balance",
                 kind=SpanKind.INTERNAL,

@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from pydantic import BaseModel
 from typing import Optional
 
@@ -33,13 +35,22 @@ class UpdateOrganizationBody(BaseModel):
 
 class TopUpBalanceBody(BaseModel):
     organization_id: int
-    amount_rub: int
+    amount_rub: str
     interserver_secret_key: str
 
 class DebitBalanceBody(BaseModel):
     organization_id: int
     interserver_secret_key: str
-    amount_rub: int
+    amount_rub: str
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "organization_id": 1,
+                "amount_rub": "100.50",  # Пример как строка
+                "interserver_secret_key": "secret"
+            }
+        }
 
 # Response models
 class CreateOrganizationResponse(BaseModel):

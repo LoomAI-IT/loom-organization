@@ -3,11 +3,10 @@ CREATE TABLE IF NOT EXISTS organizations (
     id SERIAL PRIMARY KEY,
     
     name TEXT NOT NULL,
-    rub_balance INTEGER DEFAULT 0,
+    rub_balance NUMERIC(15,2) DEFAULT 0.00,
     autoposting_moderation BOOLEAN DEFAULT TRUE,
     publication_text_end_sample TEXT DEFAULT '',
     video_cut_description_end_sample TEXT DEFAULT '',
-
     
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

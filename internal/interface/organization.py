@@ -77,11 +77,11 @@ class IOrganizationService(Protocol):
         pass
 
     @abstractmethod
-    async def top_up_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         pass
 
     @abstractmethod
-    async def debit_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         pass
 
 
@@ -117,9 +117,10 @@ class IOrganizationRepo(Protocol):
         pass
 
     @abstractmethod
-    async def top_up_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         pass
 
     @abstractmethod
-    async def debit_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         pass
+

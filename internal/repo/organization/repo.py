@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from opentelemetry.trace import Status, StatusCode, SpanKind
 from fastapi.responses import JSONResponse
 
@@ -140,7 +142,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
                 span.set_status(Status(StatusCode.ERROR, str(err)))
                 raise err
 
-    async def top_up_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         with self.tracer.start_as_current_span(
                 "OrganizationRepo.top_up_balance",
                 kind=SpanKind.INTERNAL,
@@ -162,7 +164,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
                 span.set_status(Status(StatusCode.ERROR, str(err)))
                 raise err
 
-    async def debit_balance(self, organization_id: int, amount_rub: int) -> None:
+    async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         with self.tracer.start_as_current_span(
                 "OrganizationRepo.debit_balance",
                 kind=SpanKind.INTERNAL,

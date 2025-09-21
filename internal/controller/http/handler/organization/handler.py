@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from opentelemetry.trace import Status, StatusCode, SpanKind
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
@@ -193,9 +195,6 @@ class OrganizationController(interface.IOrganizationController):
                     })
                     raise HTTPException(status_code=403, detail="Invalid interserver secret key")
 
-                if body.amount_rub <= 0:
-                    raise HTTPException(status_code=400, detail="Amount must be greater than 0")
-
                 self.logger.info("Top up balance request", {
                     "organization_id": body.organization_id,
                     "amount_rub": body.amount_rub
@@ -203,7 +202,7 @@ class OrganizationController(interface.IOrganizationController):
 
                 await self.organization_service.top_up_balance(
                     organization_id=body.organization_id,
-                    amount_rub=body.amount_rub
+                    amount_rub=Decimal(body.amount_rub)
                 )
 
                 self.logger.info("Balance topped up successfully", {
@@ -243,9 +242,6 @@ class OrganizationController(interface.IOrganizationController):
                     })
                     raise HTTPException(status_code=403, detail="Invalid interserver secret key")
 
-                if body.amount_rub <= 0:
-                    raise HTTPException(status_code=400, detail="Amount must be greater than 0")
-
                 self.logger.info("Debit balance request", {
                     "organization_id": body.organization_id,
                     "amount_rub": body.amount_rub
@@ -253,7 +249,7 @@ class OrganizationController(interface.IOrganizationController):
 
                 await self.organization_service.debit_balance(
                     organization_id=body.organization_id,
-                    amount_rub=body.amount_rub
+                    amount_rub=Decimal(body.amount_rub)
                 )
 
                 self.logger.info("Balance debited successfully", {
