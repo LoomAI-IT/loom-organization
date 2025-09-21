@@ -34,9 +34,11 @@ class UpdateOrganizationBody(BaseModel):
 class TopUpBalanceBody(BaseModel):
     organization_id: int
     amount_rub: int
+    interserver_secret_key: str
 
 class DebitBalanceBody(BaseModel):
     organization_id: int
+    interserver_secret_key: str
     amount_rub: int
 
 # Response models
