@@ -174,7 +174,7 @@ class OrganizationService(interface.IOrganizationService):
 
                 organization = organizations[0]
 
-                rub_balance = organization.rub_balance + amount_rub
+                rub_balance = organization.rub_balance - amount_rub
 
                 # # Проверяем, что у организации достаточно средств
                 # current_balance = organizations[0].rub_balance
