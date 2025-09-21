@@ -20,7 +20,7 @@ class Organization:
             cls(
                 id=row.id,
                 name=row.name,
-                rub_balance=Decimal(row.rub_balance),
+                rub_balance=Decimal(str(row.rub_balance)),
                 autoposting_moderation=row.autoposting_moderation,
                 video_cut_description_end_sample=row.video_cut_description_end_sample,
                 publication_text_end_sample=row.publication_text_end_sample,
