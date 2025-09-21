@@ -1,14 +1,14 @@
 from dataclasses import dataclass
 from datetime import datetime
-from decimal import Decimal  # Добавляем импорт
-from typing import List, Optional
+from decimal import Decimal
+from typing import List
 
 
 @dataclass
 class Organization:
     id: int
     name: str
-    rub_balance: Decimal  # Изменено с int на Decimal
+    rub_balance: Decimal
     autoposting_moderation: bool
     video_cut_description_end_sample: str
     publication_text_end_sample: str
@@ -20,7 +20,7 @@ class Organization:
             cls(
                 id=row.id,
                 name=row.name,
-                rub_balance=Decimal(str(row.rub_balance)),  # Конвертируем в Decimal
+                rub_balance=Decimal(row.rub_balance),
                 autoposting_moderation=row.autoposting_moderation,
                 video_cut_description_end_sample=row.video_cut_description_end_sample,
                 publication_text_end_sample=row.publication_text_end_sample,
@@ -33,7 +33,7 @@ class Organization:
         return {
             "id": self.id,
             "name": self.name,
-            "rub_balance": float(self.rub_balance),  # Конвертируем в float для JSON
+            "rub_balance": str(self.rub_balance),
             "autoposting_moderation": self.autoposting_moderation,
             "video_cut_description_end_sample": self.video_cut_description_end_sample,
             "publication_text_end_sample": self.publication_text_end_sample,

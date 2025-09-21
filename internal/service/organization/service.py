@@ -141,9 +141,13 @@ class OrganizationService(interface.IOrganizationService):
                 if not organizations:
                     raise common.ErrOrganizationNotFound()
 
-                await self.organization_repo.top_up_balance(
+                organization = organizations[0]
+
+                rub_balance = organization.rub_balance + amount_rub
+
+                await self.organization_repo.update_balance(
                     organization_id=organization_id,
-                    amount_rub=amount_rub
+                    rub_balance=str(rub_balance)
                 )
 
                 span.set_status(Status(StatusCode.OK))
@@ -168,14 +172,18 @@ class OrganizationService(interface.IOrganizationService):
                 if not organizations:
                     raise common.ErrOrganizationNotFound()
 
+                organization = organizations[0]
+
+                rub_balance = organization.rub_balance + amount_rub
+
                 # # Проверяем, что у организации достаточно средств
                 # current_balance = organizations[0].rub_balance
                 # if current_balance < amount_rub:
                 #     raise common.ErrInsufficientBalance()
 
-                await self.organization_repo.debit_balance(
+                await self.organization_repo.update_balance(
                     organization_id=organization_id,
-                    amount_rub=amount_rub
+                    rub_balance=str(rub_balance)
                 )
 
                 span.set_status(Status(StatusCode.OK))

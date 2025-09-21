@@ -142,43 +142,17 @@ class OrganizationRepo(interface.IOrganizationRepo):
                 span.set_status(Status(StatusCode.ERROR, str(err)))
                 raise err
 
-    async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
+    async def update_balance(self, organization_id: int, rub_balance: str) -> None:
         with self.tracer.start_as_current_span(
-                "OrganizationRepo.top_up_balance",
-                kind=SpanKind.INTERNAL,
-                attributes={
-                    "organization_id": organization_id,
-                    "amount_rub": amount_rub
-                }
+                "OrganizationRepo.update_balance",
+                kind=SpanKind.INTERNAL
         ) as span:
             try:
                 args = {
                     'organization_id': organization_id,
-                    'amount_rub': amount_rub
+                    'rub_balance': str(rub_balance)
                 }
-                await self.db.update(top_up_balance, args)
-
-                span.set_status(Status(StatusCode.OK))
-            except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
-                raise err
-
-    async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
-        with self.tracer.start_as_current_span(
-                "OrganizationRepo.debit_balance",
-                kind=SpanKind.INTERNAL,
-                attributes={
-                    "organization_id": organization_id,
-                    "amount_rub": amount_rub
-                }
-        ) as span:
-            try:
-                args = {
-                    'organization_id': organization_id,
-                    'amount_rub': amount_rub
-                }
-                await self.db.update(debit_balance, args)
+                await self.db.update(update_balance, args)
 
                 span.set_status(Status(StatusCode.OK))
             except Exception as err:

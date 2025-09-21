@@ -117,10 +117,5 @@ class IOrganizationRepo(Protocol):
         pass
 
     @abstractmethod
-    async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
+    async def update_balance(self, organization_id: int, rub_balance: str) -> None:
         pass
-
-    @abstractmethod
-    async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
-        pass
-

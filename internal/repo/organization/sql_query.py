@@ -29,14 +29,8 @@ DELETE FROM organizations
 WHERE id = :organization_id;
 """
 
-top_up_balance = """
+update_balance = """
 UPDATE organizations 
-SET rub_balance = rub_balance + :amount_rub
-WHERE id = :organization_id;
-"""
-
-debit_balance = """
-UPDATE organizations 
-SET rub_balance = rub_balance - :amount_rub
+SET rub_balance = :rub_balance
 WHERE id = :organization_id;
 """
