@@ -132,7 +132,6 @@ class OrganizationService(interface.IOrganizationService):
                 kind=SpanKind.INTERNAL,
                 attributes={
                     "organization_id": organization_id,
-                    "amount_rub": amount_rub
                 }
         ) as span:
             try:
@@ -163,7 +162,6 @@ class OrganizationService(interface.IOrganizationService):
                 kind=SpanKind.INTERNAL,
                 attributes={
                     "organization_id": organization_id,
-                    "amount_rub": amount_rub
                 }
         ) as span:
             try:
