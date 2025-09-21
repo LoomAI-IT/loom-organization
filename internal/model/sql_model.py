@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS organizations (
     id SERIAL PRIMARY KEY,
     
     name TEXT NOT NULL,
-    rub_balance TEXT DEFAULT '',
+    rub_balance TEXT DEFAULT '0',
     autoposting_moderation BOOLEAN DEFAULT TRUE,
     publication_text_end_sample TEXT DEFAULT '',
     video_cut_description_end_sample TEXT DEFAULT '',
