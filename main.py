@@ -3,7 +3,7 @@ import uvicorn
 from infrastructure.pg.pg import PG
 from infrastructure.telemetry.telemetry import Telemetry, AlertManager
 
-from pkg.client.internal.kontur_authorization.client import KonturAuthorizationClient
+from pkg.client.internal.loom_authorization.client import LoomAuthorizationClient
 
 from internal.controller.http.middlerware.middleware import HttpMiddleware
 from internal.controller.http.handler.organization.handler import OrganizationController
@@ -44,10 +44,10 @@ tel = Telemetry(
 db = PG(tel, cfg.db_user, cfg.db_pass, cfg.db_host, cfg.db_port, cfg.db_name)
 
 # Инициализация внешних клиентов
-kontur_authorization_client = KonturAuthorizationClient(
+loom_authorization_client = LoomAuthorizationClient(
     tel=tel,
-    host=cfg.kontur_authorization_host,
-    port=cfg.kontur_authorization_port,
+    host=cfg.loom_authorization_host,
+    port=cfg.loom_authorization_port,
 )
 
 # Инициализация репозиториев
@@ -63,7 +63,7 @@ organization_service = OrganizationService(
 organization_controller = OrganizationController(tel, organization_service, cfg.interserver_secret_key)
 
 # Инициализация middleware
-http_middleware = HttpMiddleware(tel, kontur_authorization_client, cfg.prefix)
+http_middleware = HttpMiddleware(tel, loom_authorization_client, cfg.prefix)
 
 if __name__ == "__main__":
     app = NewHTTP(
