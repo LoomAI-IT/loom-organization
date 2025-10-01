@@ -53,17 +53,6 @@ def include_organization_handlers(
         description="Создает новую организацию с указанным именем"
     )
 
-    # Получение организации по ID
-    app.add_api_route(
-        prefix + "/{organization_id}",
-        organization_controller.get_organization_by_id,
-        methods=["GET"],
-        tags=["Organization"],
-        response_model=GetOrganizationResponse,
-        summary="Получить организацию по ID",
-        description="Возвращает информацию об организации по её идентификатору"
-    )
-
     # Получение всех организаций
     app.add_api_route(
         prefix + "/all",
@@ -73,6 +62,17 @@ def include_organization_handlers(
         response_model=GetAllOrganizationsResponse,
         summary="Получить все организации",
         description="Возвращает список всех организаций"
+    )
+
+    # Получение организации по ID
+    app.add_api_route(
+        prefix + "/{organization_id}",
+        organization_controller.get_organization_by_id,
+        methods=["GET"],
+        tags=["Organization"],
+        response_model=GetOrganizationResponse,
+        summary="Получить организацию по ID",
+        description="Возвращает информацию об организации по её идентификатору"
     )
 
     # Обновление организации
