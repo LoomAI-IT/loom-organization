@@ -19,6 +19,6 @@ create_organization_tables_queries = [
     create_organizations_table
 ]
 
-drop_organization_tables_queries = [
+drop_queries = [
     drop_organizations_table
 ]
