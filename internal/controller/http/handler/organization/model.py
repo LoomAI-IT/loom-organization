@@ -18,18 +18,30 @@ class CreateOrganizationBody(BaseModel):
 class UpdateOrganizationBody(BaseModel):
     organization_id: int
     name: Optional[str] = None
-    autoposting_moderation: Optional[bool] = None
     video_cut_description_end_sample: Optional[str] = None
     publication_text_end_sample: Optional[str] = None
+    tone_of_voice: Optional[list[str]] = None
+    brand_rules: Optional[list[str]] = None
+    compliance_rules: Optional[list[str]] = None
+    audience_insights: Optional[list[str]] = None
+    products: Optional[list[dict]] = None
+    locale: Optional[dict] = None
+    additional_info: Optional[list[str]] = None
 
     class Config:
         json_schema_extra = {
             "example": {
                 "organization_id": 1,
                 "name": "Updated Organization Name",
-                "autoposting_moderation": False,
                 "video_cut_description_end_sample": "Sample video description ending",
-                "publication_text_end_sample": "Sample publication text ending"
+                "publication_text_end_sample": "Sample publication text ending",
+                "tone_of_voice": ["professional", "friendly"],
+                "brand_rules": ["Use consistent branding"],
+                "compliance_rules": ["Follow GDPR"],
+                "audience_insights": ["Target age 25-45"],
+                "products": [{"name": "Product A", "price": 100}],
+                "locale": {"language": "ru", "country": "RU"},
+                "additional_info": ["Extra information"]
             }
         }
 

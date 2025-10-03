@@ -75,9 +75,15 @@ class OrganizationService(interface.IOrganizationService):
             self,
             organization_id: int,
             name: str = None,
-            autoposting_moderation: bool = None,
             video_cut_description_end_sample: str = None,
             publication_text_end_sample: str = None,
+            tone_of_voice: list[str] = None,
+            brand_rules: list[str] = None,
+            compliance_rules: list[str] = None,
+            audience_insights: list[str] = None,
+            products: list[dict] = None,
+            locale: dict = None,
+            additional_info: list[str] = None,
     ) -> None:
         with self.tracer.start_as_current_span(
                 "OrganizationService.update_organization",
@@ -93,9 +99,15 @@ class OrganizationService(interface.IOrganizationService):
                 await self.organization_repo.update_organization(
                     organization_id=organization_id,
                     name=name,
-                    autoposting_moderation=autoposting_moderation,
                     video_cut_description_end_sample=video_cut_description_end_sample,
-                    publication_text_end_sample=publication_text_end_sample
+                    publication_text_end_sample=publication_text_end_sample,
+                    tone_of_voice=tone_of_voice,
+                    brand_rules=brand_rules,
+                    compliance_rules=compliance_rules,
+                    audience_insights=audience_insights,
+                    products=products,
+                    locale=locale,
+                    additional_info=additional_info
                 )
 
                 span.set_status(Status(StatusCode.OK))

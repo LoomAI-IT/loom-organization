@@ -1,3 +1,4 @@
+import json
 from decimal import Decimal
 
 from opentelemetry.trace import Status, StatusCode, SpanKind
@@ -16,7 +17,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
         self.tracer = tel.tracer()
         self.db = db
 
-    async def create_organization(self, name: str, autoposting_moderation: bool = True) -> int:
+    async def create_organization(self, name: str) -> int:
         with self.tracer.start_as_current_span(
                 "OrganizationRepo.create_organization",
                 kind=SpanKind.INTERNAL,
@@ -25,7 +26,6 @@ class OrganizationRepo(interface.IOrganizationRepo):
             try:
                 args = {
                     'name': name,
-                    'autoposting_moderation': autoposting_moderation,
                 }
 
                 organization_id = await self.db.insert(create_organization, args)
@@ -76,9 +76,15 @@ class OrganizationRepo(interface.IOrganizationRepo):
             self,
             organization_id: int,
             name: str = None,
-            autoposting_moderation: bool = None,
             video_cut_description_end_sample: str = None,
             publication_text_end_sample: str = None,
+            tone_of_voice: list[str] = None,
+            brand_rules: list[str] = None,
+            compliance_rules: list[str] = None,
+            audience_insights: list[str] = None,
+            products: list[dict] = None,
+            locale: dict = None,
+            additional_info: list[str] = None,
     ) -> None:
         with self.tracer.start_as_current_span(
                 "OrganizationRepo.update_organization",
@@ -94,10 +100,6 @@ class OrganizationRepo(interface.IOrganizationRepo):
                     update_fields.append("name = :name")
                     args['name'] = name
 
-                if autoposting_moderation is not None:
-                    update_fields.append("autoposting_moderation = :autoposting_moderation")
-                    args['autoposting_moderation'] = autoposting_moderation
-
                 if video_cut_description_end_sample is not None:
                     update_fields.append("video_cut_description_end_sample = :video_cut_description_end_sample")
                     args['video_cut_description_end_sample'] = video_cut_description_end_sample
@@ -106,6 +108,34 @@ class OrganizationRepo(interface.IOrganizationRepo):
                     update_fields.append("publication_text_end_sample = :publication_text_end_sample")
                     args['publication_text_end_sample'] = publication_text_end_sample
 
+                if tone_of_voice is not None:
+                    update_fields.append("tone_of_voice = :tone_of_voice")
+                    args['tone_of_voice'] = tone_of_voice
+
+                if brand_rules is not None:
+                    update_fields.append("brand_rules = :brand_rules")
+                    args['brand_rules'] = brand_rules
+
+                if compliance_rules is not None:
+                    update_fields.append("compliance_rules = :compliance_rules")
+                    args['compliance_rules'] = compliance_rules
+
+                if audience_insights is not None:
+                    update_fields.append("audience_insights = :audience_insights")
+                    args['audience_insights'] = audience_insights
+
+                if products is not None:
+                    update_fields.append("products = :products")
+                    args['products'] = [json.dumps(product) for product in products]
+
+                if locale is not None:
+                    update_fields.append("locale = :locale")
+                    args['locale'] = json.dumps(locale)
+
+                if additional_info is not None:
+                    update_fields.append("additional_info = :additional_info")
+                    args['additional_info'] = additional_info
+
                 if not update_fields:
                     # Если нет полей для обновления, просто возвращаемся
                     span.set_status(Status(StatusCode.OK))
@@ -113,7 +143,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
 
                 # Формируем финальный запрос
                 query = f"""
-                UPDATE organizations 
+                UPDATE organizations
                 SET {', '.join(update_fields)}
                 WHERE id = :organization_id;
                 """

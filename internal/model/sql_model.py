@@ -4,10 +4,16 @@ CREATE TABLE IF NOT EXISTS organizations (
     
     name TEXT NOT NULL,
     rub_balance TEXT DEFAULT '0',
-    autoposting_moderation BOOLEAN DEFAULT TRUE,
-    publication_text_end_sample TEXT DEFAULT '',
     video_cut_description_end_sample TEXT DEFAULT '',
+    publication_text_end_sample TEXT DEFAULT '',
     
+    tone_of_voice TEXT[] DEFAULT '{}',
+    brand_rules TEXT[] DEFAULT '{}',
+    compliance_rules TEXT[] DEFAULT '{}',
+    audience_insights TEXT[] DEFAULT '{}',
+    products JSONB[] DEFAULT '{}',
+    locale JSONB DEFAULT '{}',
+    additional_info TEXT[] DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """

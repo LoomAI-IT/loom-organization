@@ -130,9 +130,15 @@ class OrganizationController(interface.IOrganizationController):
                 await self.organization_service.update_organization(
                     organization_id=body.organization_id,
                     name=body.name,
-                    autoposting_moderation=body.autoposting_moderation,
                     video_cut_description_end_sample=body.video_cut_description_end_sample,
-                    publication_text_end_sample=body.publication_text_end_sample
+                    publication_text_end_sample=body.publication_text_end_sample,
+                    tone_of_voice=body.tone_of_voice,
+                    brand_rules=body.brand_rules,
+                    compliance_rules=body.compliance_rules,
+                    audience_insights=body.audience_insights,
+                    products=body.products,
+                    locale=body.locale,
+                    additional_info=body.additional_info
                 )
 
                 self.logger.info("Organization updated successfully", {

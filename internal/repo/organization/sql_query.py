@@ -1,15 +1,9 @@
 create_organization = """
 INSERT INTO organizations (
-    name,
-    autoposting_moderation,
-    publication_text_end_sample,
-    video_cut_description_end_sample
+    name
 )
 VALUES (
-    :name,
-    :autoposting_moderation,
-    '',
-    ''
+    :name
 )
 RETURNING id;
 """
