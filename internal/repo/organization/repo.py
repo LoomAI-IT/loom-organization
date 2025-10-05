@@ -30,11 +30,11 @@ class OrganizationRepo(interface.IOrganizationRepo):
 
                 organization_id = await self.db.insert(create_organization, args)
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return organization_id
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def get_organization_by_id(self, organization_id: int) -> list[model.Organization]:
@@ -48,11 +48,11 @@ class OrganizationRepo(interface.IOrganizationRepo):
                 rows = await self.db.select(get_organization_by_id, args)
                 organizations = model.Organization.serialize(rows) if rows else []
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return organizations
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
 
@@ -65,11 +65,11 @@ class OrganizationRepo(interface.IOrganizationRepo):
                 rows = await self.db.select(get_all_organizations, {})
                 organizations = model.Organization.serialize(rows) if rows else []
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return organizations
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def update_organization(
@@ -138,7 +138,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
 
                 if not update_fields:
                     # Если нет полей для обновления, просто возвращаемся
-                    span.set_status(Status(StatusCode.OK))
+                    span.set_status(StatusCode.OK)
                     return
 
                 # Формируем финальный запрос
@@ -150,10 +150,10 @@ class OrganizationRepo(interface.IOrganizationRepo):
 
                 await self.db.update(query, args)
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def delete_organization(self, organization_id: int) -> None:
@@ -166,10 +166,10 @@ class OrganizationRepo(interface.IOrganizationRepo):
                 args = {'organization_id': organization_id}
                 await self.db.update(delete_organization, args)
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def update_balance(self, organization_id: int, rub_balance: str) -> None:
@@ -184,8 +184,8 @@ class OrganizationRepo(interface.IOrganizationRepo):
                 }
                 await self.db.update(update_balance, args)
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err

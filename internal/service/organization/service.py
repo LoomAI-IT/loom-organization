@@ -26,12 +26,12 @@ class OrganizationService(interface.IOrganizationService):
                     name=name
                 )
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return organization_id
 
             except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
+                
+                span.set_status(StatusCode.ERROR, str(e))
                 raise
 
     async def get_organization_by_id(self, organization_id: int) -> model.Organization:
@@ -47,12 +47,12 @@ class OrganizationService(interface.IOrganizationService):
 
                 organization = organizations[0]
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return organization
 
             except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
+                
+                span.set_status(StatusCode.ERROR, str(e))
                 raise
 
     async def get_all_organizations(self) -> list[model.Organization]:
@@ -63,12 +63,12 @@ class OrganizationService(interface.IOrganizationService):
             try:
                 organizations = await self.organization_repo.get_all_organizations()
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return organizations
 
             except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
+                
+                span.set_status(StatusCode.ERROR, str(e))
                 raise
 
     async def update_organization(
@@ -110,11 +110,11 @@ class OrganizationService(interface.IOrganizationService):
                     additional_info=additional_info
                 )
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
 
             except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
+                
+                span.set_status(StatusCode.ERROR, str(e))
                 raise
 
     async def delete_organization(self, organization_id: int) -> None:
@@ -131,11 +131,11 @@ class OrganizationService(interface.IOrganizationService):
 
                 await self.organization_repo.delete_organization(organization_id)
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
 
             except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
+                
+                span.set_status(StatusCode.ERROR, str(e))
                 raise
 
     async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
@@ -161,11 +161,11 @@ class OrganizationService(interface.IOrganizationService):
                     rub_balance=str(rub_balance)
                 )
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
 
             except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
+                
+                span.set_status(StatusCode.ERROR, str(e))
                 raise
 
     async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
@@ -196,9 +196,9 @@ class OrganizationService(interface.IOrganizationService):
                     rub_balance=str(rub_balance)
                 )
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
 
             except Exception as e:
-                span.record_exception(e)
-                span.set_status(Status(StatusCode.ERROR, str(e)))
+                
+                span.set_status(StatusCode.ERROR, str(e))
                 raise

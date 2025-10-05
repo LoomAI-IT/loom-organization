@@ -1,5 +1,4 @@
 from fastapi import FastAPI
-from starlette.responses import StreamingResponse
 
 from internal import model, interface
 from internal.controller.http.handler.organization.model import *
@@ -81,7 +80,6 @@ def include_organization_handlers(
         organization_controller.update_organization,
         methods=["PUT"],
         tags=["Organization"],
-        response_model=UpdateOrganizationResponse,
         summary="Обновить организацию",
         description="Обновляет информацию об организации"
     )
@@ -92,7 +90,6 @@ def include_organization_handlers(
         organization_controller.delete_organization,
         methods=["DELETE"],
         tags=["Organization"],
-        response_model=DeleteOrganizationResponse,
         summary="Удалить организацию",
         description="Удаляет организацию по её идентификатору"
     )
@@ -119,9 +116,6 @@ def include_organization_handlers(
 
 
 def include_db_handler(app: FastAPI, db: interface.IDB, prefix: str):
-    """
-    Добавляет служебные эндпоинты для управления базой данных
-    """
     app.add_api_route(
         prefix + "/table/create",
         create_table_handler(db),
@@ -141,11 +135,13 @@ def include_db_handler(app: FastAPI, db: interface.IDB, prefix: str):
     )
     app.add_api_route(prefix + "/health", heath_check_handler(), methods=["GET"])
 
+
 def heath_check_handler():
     async def heath_check():
         return "ok"
 
     return heath_check
+
 
 def create_table_handler(db: interface.IDB):
     async def create_table():

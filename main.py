@@ -15,7 +15,6 @@ from internal.app.http.app import NewHTTP
 from internal.config.config import Config
 
 cfg = Config()
-print(f"{cfg=}", flush=True)
 
 alert_manager = AlertManager(
     cfg.alert_tg_bot_token,

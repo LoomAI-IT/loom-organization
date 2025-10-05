@@ -258,11 +258,11 @@ class HttpMiddleware(interface.IHttpMiddleware):
 
                     response = await call_next(request)
 
-                    span.set_status(Status(StatusCode.OK))
+                    span.set_status(StatusCode.OK)
                     return response
                 except Exception as e:
-                    span.record_exception(e)
-                    span.set_status(Status(StatusCode.ERROR, str(e)))
+                    
+                    span.set_status(StatusCode.ERROR, str(e))
                     raise e
 
         return _authorization_middleware04

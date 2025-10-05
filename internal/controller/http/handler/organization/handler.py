@@ -31,30 +31,25 @@ class OrganizationController(interface.IOrganizationController):
         ) as span:
             try:
 
-                self.logger.info("Create organization request", {
-                    "org_name": body.name
-                })
+                self.logger.info("Начало создания организации")
 
                 organization_id = await self.organization_service.create_organization(
                     name=body.name,
                 )
 
-                self.logger.info("Organization created successfully", {
-                    "organization_id": organization_id
-                })
+                self.logger.info("Организация успешно создана")
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return JSONResponse(
                     status_code=201,
                     content={
-                        "message": "Organization created successfully",
                         "organization_id": organization_id
                     }
                 )
 
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def get_organization_by_id(self, request: Request, organization_id: int) -> JSONResponse:
@@ -65,25 +60,21 @@ class OrganizationController(interface.IOrganizationController):
         ) as span:
             try:
 
-                self.logger.info("Get organization by ID request", {
-                    "organization_id": organization_id
-                })
+                self.logger.info("Начало получения организации по ID")
 
                 organization = await self.organization_service.get_organization_by_id(organization_id)
 
-                self.logger.info("Organization retrieved successfully", {
-                    "organization_id": organization_id
-                })
+                self.logger.info("Организация успешно получена")
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return JSONResponse(
                     status_code=200,
                     content=organization.to_dict()
                 )
 
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
 
@@ -94,26 +85,23 @@ class OrganizationController(interface.IOrganizationController):
         ) as span:
             try:
 
-                self.logger.info("Get all organizations request")
+                self.logger.info("Начало получения всех организаций")
 
                 organizations = await self.organization_service.get_all_organizations()
 
-                self.logger.info("All organizations retrieved successfully", {
-                    "count": len(organizations)
-                })
+                self.logger.info("Все организации успешно получены")
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return JSONResponse(
                     status_code=200,
                     content={
-                        "message": "Organizations retrieved successfully",
                         "organizations": [org.to_dict() for org in organizations]
                     }
                 )
 
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def update_organization(self, request: Request, body: UpdateOrganizationBody) -> JSONResponse:
@@ -124,8 +112,7 @@ class OrganizationController(interface.IOrganizationController):
         ) as span:
             try:
 
-                self.logger.info("Update organization request", {
-                })
+                self.logger.info("Начало обновления организации")
 
                 await self.organization_service.update_organization(
                     organization_id=body.organization_id,
@@ -141,18 +128,17 @@ class OrganizationController(interface.IOrganizationController):
                     additional_info=body.additional_info
                 )
 
-                self.logger.info("Organization updated successfully", {
-                })
+                self.logger.info("Организация успешно обновлена")
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return JSONResponse(
                     status_code=200,
-                    content={"message": "Organization updated successfully"}
+                    content={}
                 )
 
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def delete_organization(self, organization_id: int) -> JSONResponse:
@@ -163,25 +149,21 @@ class OrganizationController(interface.IOrganizationController):
         ) as span:
             try:
 
-                self.logger.info("Delete organization request", {
-                    "organization_id": organization_id
-                })
+                self.logger.info("Начало удаления организации")
 
                 await self.organization_service.delete_organization(organization_id)
 
-                self.logger.info("Organization deleted successfully", {
-                    "organization_id": organization_id
-                })
+                self.logger.info("Организация успешно удалена")
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return JSONResponse(
                     status_code=200,
                     content={"message": "Organization deleted successfully"}
                 )
 
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def top_up_balance(self, body: TopUpBalanceBody) -> JSONResponse:
@@ -196,39 +178,30 @@ class OrganizationController(interface.IOrganizationController):
             try:
                 # Проверка межсервисного ключа
                 if body.interserver_secret_key != self.interserver_secret_key:
-                    self.logger.warning("Неверный межсервисный ключ для пополнения баланса", {
-                        "organization_id": body.organization_id
-                    })
+                    self.logger.warning("Неверный межсервисный ключ для пополнения баланса")
                     raise HTTPException(status_code=403, detail="Invalid interserver secret key")
 
-                self.logger.info("Top up balance request", {
-                    "organization_id": body.organization_id,
-                    "amount_rub": body.amount_rub
-                })
+                self.logger.info("Начало пополнения баланса")
 
                 await self.organization_service.top_up_balance(
                     organization_id=body.organization_id,
                     amount_rub=Decimal(body.amount_rub)
                 )
 
-                self.logger.info("Balance topped up successfully", {
-                    "organization_id": body.organization_id,
-                    "amount_rub": body.amount_rub
-                })
+                self.logger.info("Баланс успешно пополнен")
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return JSONResponse(
                     status_code=200,
                     content={
-                        "message": "Balance topped up successfully",
                         "organization_id": body.organization_id,
                         "amount_rub": body.amount_rub
                     }
                 )
 
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
 
     async def debit_balance(self, body: DebitBalanceBody) -> JSONResponse:
@@ -243,37 +216,28 @@ class OrganizationController(interface.IOrganizationController):
             try:
                 # Проверка межсервисного ключа
                 if body.interserver_secret_key != self.interserver_secret_key:
-                    self.logger.warning("Неверный межсервисный ключ для списания баланса", {
-                        "organization_id": body.organization_id
-                    })
+                    self.logger.warning("Неверный межсервисный ключ для списания баланса")
                     raise HTTPException(status_code=403, detail="Invalid interserver secret key")
 
-                self.logger.info("Debit balance request", {
-                    "organization_id": body.organization_id,
-                    "amount_rub": body.amount_rub
-                })
+                self.logger.info("Начало списания баланса")
 
                 await self.organization_service.debit_balance(
                     organization_id=body.organization_id,
                     amount_rub=Decimal(body.amount_rub)
                 )
 
-                self.logger.info("Balance debited successfully", {
-                    "organization_id": body.organization_id,
-                    "amount_rub": body.amount_rub
-                })
+                self.logger.info("Баланс успешно списан")
 
-                span.set_status(Status(StatusCode.OK))
+                span.set_status(StatusCode.OK)
                 return JSONResponse(
                     status_code=200,
                     content={
-                        "message": "Balance debited successfully",
                         "organization_id": body.organization_id,
                         "amount_rub": body.amount_rub
                     }
                 )
 
             except Exception as err:
-                span.record_exception(err)
-                span.set_status(Status(StatusCode.ERROR, str(err)))
+                
+                span.set_status(StatusCode.ERROR, str(err))
                 raise err
