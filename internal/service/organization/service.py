@@ -51,7 +51,6 @@ class OrganizationService(interface.IOrganizationService):
                 return organization
 
             except Exception as e:
-                self.logger.error("Ошибка при получении организации по ID")
                 span.set_status(StatusCode.ERROR, str(e))
                 raise
 
