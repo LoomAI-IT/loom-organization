@@ -30,7 +30,6 @@ class OrganizationService(interface.IOrganizationService):
                 return organization_id
 
             except Exception as e:
-                
                 span.set_status(StatusCode.ERROR, str(e))
                 raise
 
@@ -43,6 +42,7 @@ class OrganizationService(interface.IOrganizationService):
             try:
                 organizations = await self.organization_repo.get_organization_by_id(organization_id)
                 if not organizations:
+                    self.logger.warning("Организация не найдена")
                     raise common.ErrOrganizationNotFound()
 
                 organization = organizations[0]
@@ -51,7 +51,7 @@ class OrganizationService(interface.IOrganizationService):
                 return organization
 
             except Exception as e:
-                
+                self.logger.error("Ошибка при получении организации по ID")
                 span.set_status(StatusCode.ERROR, str(e))
                 raise
 
@@ -67,7 +67,6 @@ class OrganizationService(interface.IOrganizationService):
                 return organizations
 
             except Exception as e:
-                
                 span.set_status(StatusCode.ERROR, str(e))
                 raise
 
@@ -94,6 +93,7 @@ class OrganizationService(interface.IOrganizationService):
                 # Проверяем, что организация существует
                 organizations = await self.organization_repo.get_organization_by_id(organization_id)
                 if not organizations:
+                    self.logger.warning("Организация не найдена")
                     raise common.ErrOrganizationNotFound()
 
                 await self.organization_repo.update_organization(
@@ -113,7 +113,7 @@ class OrganizationService(interface.IOrganizationService):
                 span.set_status(StatusCode.OK)
 
             except Exception as e:
-                
+
                 span.set_status(StatusCode.ERROR, str(e))
                 raise
 
@@ -127,6 +127,7 @@ class OrganizationService(interface.IOrganizationService):
                 # Проверяем, что организация существует
                 organizations = await self.organization_repo.get_organization_by_id(organization_id)
                 if not organizations:
+                    self.logger.warning("Организация не найдена")
                     raise common.ErrOrganizationNotFound()
 
                 await self.organization_repo.delete_organization(organization_id)
@@ -134,7 +135,6 @@ class OrganizationService(interface.IOrganizationService):
                 span.set_status(StatusCode.OK)
 
             except Exception as e:
-                
                 span.set_status(StatusCode.ERROR, str(e))
                 raise
 
@@ -150,6 +150,7 @@ class OrganizationService(interface.IOrganizationService):
                 # Проверяем, что организация существует
                 organizations = await self.organization_repo.get_organization_by_id(organization_id)
                 if not organizations:
+                    self.logger.warning("Организация не найдена")
                     raise common.ErrOrganizationNotFound()
 
                 organization = organizations[0]
@@ -164,7 +165,6 @@ class OrganizationService(interface.IOrganizationService):
                 span.set_status(StatusCode.OK)
 
             except Exception as e:
-                
                 span.set_status(StatusCode.ERROR, str(e))
                 raise
 
@@ -180,6 +180,7 @@ class OrganizationService(interface.IOrganizationService):
                 # Проверяем, что организация существует
                 organizations = await self.organization_repo.get_organization_by_id(organization_id)
                 if not organizations:
+                    self.logger.warning("Организация не найдена")
                     raise common.ErrOrganizationNotFound()
 
                 organization = organizations[0]
@@ -199,6 +200,5 @@ class OrganizationService(interface.IOrganizationService):
                 span.set_status(StatusCode.OK)
 
             except Exception as e:
-                
                 span.set_status(StatusCode.ERROR, str(e))
                 raise

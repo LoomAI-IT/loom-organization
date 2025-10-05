@@ -1,4 +1,5 @@
 from abc import abstractmethod
+from decimal import Decimal
 from typing import Protocol
 
 from fastapi.responses import JSONResponse
