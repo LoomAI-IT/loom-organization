@@ -71,11 +71,24 @@ organization_controller = OrganizationController(tel, organization_service, cfg.
 # Инициализация middleware
 http_middleware = HttpMiddleware(tel, loom_authorization_client, cfg.prefix, log_context)
 
+app = NewHTTP(
+    db=db,
+    organization_controller=organization_controller,
+    http_middleware=http_middleware,
+    prefix=cfg.prefix,
+)
+
 if __name__ == "__main__":
-    app = NewHTTP(
-        db=db,
-        organization_controller=organization_controller,
-        http_middleware=http_middleware,
-        prefix=cfg.prefix,
+    if cfg.environment == "prod":
+        workers = 4
+    else:
+        workers = 1
+
+    uvicorn.run(
+        "main:app",
+        host="0.0.0.0",
+        port=int(cfg.http_port),
+        workers=workers,
+        loop="uvloop",
+        access_log=False,
     )
-    uvicorn.run(app, host="0.0.0.0", port=int(cfg.http_port), access_log=False)
