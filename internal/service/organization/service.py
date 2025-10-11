@@ -18,6 +18,13 @@ class OrganizationService(interface.IOrganizationService):
     @traced_method()
     async def create_organization(self, name: str) -> int:
         organization_id = await self.organization_repo.create_organization(name)
+
+        cost_multiplier_id = await self.organization_repo.create_cost_multiplier(
+            organization_id=organization_id,
+            generate_text_cost_multiplier=3.0,
+            generate_image_cost_multiplier=3.0,
+            generate_vizard_video_cut_cost_multiplier=3.0
+        )
         return organization_id
 
     @traced_method()
@@ -86,3 +93,28 @@ class OrganizationService(interface.IOrganizationService):
             organization_id=organization_id,
             rub_balance=str(rub_balance)
         )
+
+    # Cost Multipliers methods
+    @traced_method()
+    async def get_cost_multiplier_by_organization_id(self, organization_id: int) -> model.CostMultiplier:
+        cost_multiplier = (await self.organization_repo.get_cost_multiplier_by_organization_id(organization_id))[0]
+        return cost_multiplier
+
+    @traced_method()
+    async def update_cost_multiplier(
+            self,
+            organization_id: int,
+            generate_text_cost_multiplier: float = None,
+            generate_image_cost_multiplier: float = None,
+            generate_vizard_video_cut_cost_multiplier: float = None,
+    ) -> None:
+        await self.organization_repo.update_cost_multiplier(
+            organization_id=organization_id,
+            generate_text_cost_multiplier=generate_text_cost_multiplier,
+            generate_image_cost_multiplier=generate_image_cost_multiplier,
+            generate_vizard_video_cut_cost_multiplier=generate_vizard_video_cut_cost_multiplier
+        )
+
+    @traced_method()
+    async def delete_cost_multiplier(self, organization_id: int) -> None:
+        await self.organization_repo.delete_cost_multiplier(organization_id)
