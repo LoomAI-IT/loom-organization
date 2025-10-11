@@ -50,3 +50,4 @@ class UpdateCostMultiplierBody(BaseModel):
     generate_text_cost_multiplier: float = None
     generate_image_cost_multiplier: float = None
     generate_vizard_video_cut_cost_multiplier: float = None
+    transcribe_audio_cost_multiplier: float = None

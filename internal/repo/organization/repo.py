@@ -129,13 +129,15 @@ class OrganizationRepo(interface.IOrganizationRepo):
             organization_id: int,
             generate_text_cost_multiplier: float,
             generate_image_cost_multiplier: float,
-            generate_vizard_video_cut_cost_multiplier: float
+            generate_vizard_video_cut_cost_multiplier: float,
+            transcribe_audio_cost_multiplier: float
     ) -> int:
         args = {
             'organization_id': organization_id,
             'generate_text_cost_multiplier': generate_text_cost_multiplier,
             'generate_image_cost_multiplier': generate_image_cost_multiplier,
             'generate_vizard_video_cut_cost_multiplier': generate_vizard_video_cut_cost_multiplier,
+            'transcribe_audio_cost_multiplier': transcribe_audio_cost_multiplier,
         }
 
         cost_multiplier_id = await self.db.insert(create_cost_multiplier, args)
@@ -157,6 +159,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
             generate_text_cost_multiplier: float = None,
             generate_image_cost_multiplier: float = None,
             generate_vizard_video_cut_cost_multiplier: float = None,
+            transcribe_audio_cost_multiplier: float = None,
     ) -> None:
         update_fields = []
         args: dict = {'organization_id': organization_id}
@@ -172,6 +175,10 @@ class OrganizationRepo(interface.IOrganizationRepo):
         if generate_vizard_video_cut_cost_multiplier is not None:
             update_fields.append("generate_vizard_video_cut_cost_multiplier = :generate_vizard_video_cut_cost_multiplier")
             args['generate_vizard_video_cut_cost_multiplier'] = generate_vizard_video_cut_cost_multiplier
+
+        if transcribe_audio_cost_multiplier is not None:
+            update_fields.append("transcribe_audio_cost_multiplier = :transcribe_audio_cost_multiplier")
+            args['transcribe_audio_cost_multiplier'] = transcribe_audio_cost_multiplier
 
         if not update_fields:
             return

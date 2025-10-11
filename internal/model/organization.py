@@ -65,6 +65,7 @@ class CostMultiplier:
     generate_text_cost_multiplier: float
     generate_image_cost_multiplier: float
     generate_vizard_video_cut_cost_multiplier: float
+    transcribe_audio_cost_multiplier: float
     created_at: datetime
 
     @classmethod
@@ -76,6 +77,7 @@ class CostMultiplier:
                 generate_text_cost_multiplier=float(row.generate_text_cost_multiplier),
                 generate_image_cost_multiplier=float(row.generate_image_cost_multiplier),
                 generate_vizard_video_cut_cost_multiplier=float(row.generate_vizard_video_cut_cost_multiplier),
+                transcribe_audio_cost_multiplier=float(row.transcribe_audio_cost_multiplier),
                 created_at=row.created_at
             )
             for row in rows
@@ -88,5 +90,6 @@ class CostMultiplier:
             "generate_text_cost_multiplier": self.generate_text_cost_multiplier,
             "generate_image_cost_multiplier": self.generate_image_cost_multiplier,
             "generate_vizard_video_cut_cost_multiplier": self.generate_vizard_video_cut_cost_multiplier,
+            "transcribe_audio_cost_multiplier": self.transcribe_audio_cost_multiplier,
             "created_at": self.created_at.isoformat()
         }

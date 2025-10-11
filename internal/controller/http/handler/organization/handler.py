@@ -153,7 +153,8 @@ class OrganizationController(interface.IOrganizationController):
             organization_id=body.organization_id,
             generate_text_cost_multiplier=body.generate_text_cost_multiplier,
             generate_image_cost_multiplier=body.generate_image_cost_multiplier,
-            generate_vizard_video_cut_cost_multiplier=body.generate_vizard_video_cut_cost_multiplier
+            generate_vizard_video_cut_cost_multiplier=body.generate_vizard_video_cut_cost_multiplier,
+            transcribe_audio_cost_multiplier=body.transcribe_audio_cost_multiplier
         )
 
         return JSONResponse(

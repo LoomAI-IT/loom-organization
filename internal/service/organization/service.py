@@ -23,7 +23,8 @@ class OrganizationService(interface.IOrganizationService):
             organization_id=organization_id,
             generate_text_cost_multiplier=3.0,
             generate_image_cost_multiplier=3.0,
-            generate_vizard_video_cut_cost_multiplier=3.0
+            generate_vizard_video_cut_cost_multiplier=3.0,
+            transcribe_audio_cost_multiplier=3.0
         )
         return organization_id
 
@@ -107,12 +108,14 @@ class OrganizationService(interface.IOrganizationService):
             generate_text_cost_multiplier: float = None,
             generate_image_cost_multiplier: float = None,
             generate_vizard_video_cut_cost_multiplier: float = None,
+            transcribe_audio_cost_multiplier: float = None,
     ) -> None:
         await self.organization_repo.update_cost_multiplier(
             organization_id=organization_id,
             generate_text_cost_multiplier=generate_text_cost_multiplier,
             generate_image_cost_multiplier=generate_image_cost_multiplier,
-            generate_vizard_video_cut_cost_multiplier=generate_vizard_video_cut_cost_multiplier
+            generate_vizard_video_cut_cost_multiplier=generate_vizard_video_cut_cost_multiplier,
+            transcribe_audio_cost_multiplier=transcribe_audio_cost_multiplier
         )
 
     @traced_method()

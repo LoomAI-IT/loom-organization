@@ -110,6 +110,7 @@ class IOrganizationService(Protocol):
             generate_text_cost_multiplier: float = None,
             generate_image_cost_multiplier: float = None,
             generate_vizard_video_cut_cost_multiplier: float = None,
+            transcribe_audio_cost_multiplier: float = None,
     ) -> None:
         pass
 
@@ -165,7 +166,8 @@ class IOrganizationRepo(Protocol):
             organization_id: int,
             generate_text_cost_multiplier: float,
             generate_image_cost_multiplier: float,
-            generate_vizard_video_cut_cost_multiplier: float
+            generate_vizard_video_cut_cost_multiplier: float,
+            transcribe_audio_cost_multiplier: float
     ) -> int:
         pass
 
@@ -180,6 +182,7 @@ class IOrganizationRepo(Protocol):
             generate_text_cost_multiplier: float = None,
             generate_image_cost_multiplier: float = None,
             generate_vizard_video_cut_cost_multiplier: float = None,
+            transcribe_audio_cost_multiplier: float = None,
     ) -> None:
         pass
 

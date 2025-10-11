@@ -35,13 +35,15 @@ INSERT INTO cost_multipliers (
     organization_id,
     generate_text_cost_multiplier,
     generate_image_cost_multiplier,
-    generate_vizard_video_cut_cost_multiplier
+    generate_vizard_video_cut_cost_multiplier,
+    transcribe_audio_cost_multiplier
 )
 VALUES (
     :organization_id,
     :generate_text_cost_multiplier,
     :generate_image_cost_multiplier,
-    :generate_vizard_video_cut_cost_multiplier
+    :generate_vizard_video_cut_cost_multiplier,
+    :transcribe_audio_cost_multiplier
 )
 RETURNING id;
 """
