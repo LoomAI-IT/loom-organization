@@ -56,3 +56,37 @@ class Organization:
             "additional_info": self.additional_info,
             "created_at": self.created_at.isoformat()
         }
+
+
+@dataclass
+class CostMultiplier:
+    id: int
+    organization_id: int
+    generate_text_cost_multiplier: float
+    generate_image_cost_multiplier: float
+    generate_vizard_video_cut_cost_multiplier: float
+    created_at: datetime
+
+    @classmethod
+    def serialize(cls, rows) -> list['CostMultiplier']:
+        return [
+            cls(
+                id=row.id,
+                organization_id=row.organization_id,
+                generate_text_cost_multiplier=float(row.generate_text_cost_multiplier),
+                generate_image_cost_multiplier=float(row.generate_image_cost_multiplier),
+                generate_vizard_video_cut_cost_multiplier=float(row.generate_vizard_video_cut_cost_multiplier),
+                created_at=row.created_at
+            )
+            for row in rows
+        ]
+
+    def to_dict(self) -> dict:
+        return {
+            "id": self.id,
+            "organization_id": self.organization_id,
+            "generate_text_cost_multiplier": self.generate_text_cost_multiplier,
+            "generate_image_cost_multiplier": self.generate_image_cost_multiplier,
+            "generate_vizard_video_cut_cost_multiplier": self.generate_vizard_video_cut_cost_multiplier,
+            "created_at": self.created_at.isoformat()
+        }
