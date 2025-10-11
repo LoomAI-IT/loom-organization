@@ -17,19 +17,20 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def create_organization(self, name: str) -> int:
-        organization_id = await self.organization_repo.create_organization(
-            name=name
+        organization_id = await self.organization_repo.create_organization(name)
+
+        cost_multiplier_id = await self.organization_repo.create_cost_multiplier(
+            organization_id=organization_id,
+            generate_text_cost_multiplier=3.0,
+            generate_image_cost_multiplier=3.0,
+            generate_vizard_video_cut_cost_multiplier=3.0,
+            transcribe_audio_cost_multiplier=3.0
         )
         return organization_id
 
     @traced_method()
     async def get_organization_by_id(self, organization_id: int) -> model.Organization:
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
-        organization = organizations[0]
+        organization = (await self.organization_repo.get_organization_by_id(organization_id))[0]
         return organization
 
     @traced_method()
@@ -52,11 +53,6 @@ class OrganizationService(interface.IOrganizationService):
             locale: dict = None,
             additional_info: list[str] = None,
     ) -> None:
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
         await self.organization_repo.update_organization(
             organization_id=organization_id,
             name=name,
@@ -73,25 +69,13 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def delete_organization(self, organization_id: int) -> None:
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
         await self.organization_repo.delete_organization(organization_id)
 
     @traced_method()
     async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
-        # Проверяем, что организация существует
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
-        organization = organizations[0]
+        organization = (await self.organization_repo.get_organization_by_id(organization_id))[0]
 
         rub_balance = organization.rub_balance + amount_rub
-
         await self.organization_repo.update_balance(
             organization_id=organization_id,
             rub_balance=str(rub_balance)
@@ -99,22 +83,41 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
-        # Проверяем, что организация существует
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
+        organization = (await self.organization_repo.get_organization_by_id(organization_id))[0]
 
-        organization = organizations[0]
+        current_balance = organization.rub_balance
+        if current_balance < amount_rub:
+            raise common.ErrInsufficientBalance()
 
         rub_balance = organization.rub_balance - amount_rub
-
-        # # Проверяем, что у организации достаточно средств
-        # current_balance = organizations[0].rub_balance
-        # if current_balance < amount_rub:
-        #     raise common.ErrInsufficientBalance()
-
         await self.organization_repo.update_balance(
             organization_id=organization_id,
             rub_balance=str(rub_balance)
         )
+
+    # Cost Multipliers methods
+    @traced_method()
+    async def get_cost_multiplier_by_organization_id(self, organization_id: int) -> model.CostMultiplier:
+        cost_multiplier = (await self.organization_repo.get_cost_multiplier_by_organization_id(organization_id))[0]
+        return cost_multiplier
+
+    @traced_method()
+    async def update_cost_multiplier(
+            self,
+            organization_id: int,
+            generate_text_cost_multiplier: float = None,
+            generate_image_cost_multiplier: float = None,
+            generate_vizard_video_cut_cost_multiplier: float = None,
+            transcribe_audio_cost_multiplier: float = None,
+    ) -> None:
+        await self.organization_repo.update_cost_multiplier(
+            organization_id=organization_id,
+            generate_text_cost_multiplier=generate_text_cost_multiplier,
+            generate_image_cost_multiplier=generate_image_cost_multiplier,
+            generate_vizard_video_cut_cost_multiplier=generate_vizard_video_cut_cost_multiplier,
+            transcribe_audio_cost_multiplier=transcribe_audio_cost_multiplier
+        )
+
+    @traced_method()
+    async def delete_cost_multiplier(self, organization_id: int) -> None:
+        await self.organization_repo.delete_cost_multiplier(organization_id)

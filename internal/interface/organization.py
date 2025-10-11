@@ -45,6 +45,14 @@ class IOrganizationController(Protocol):
     async def debit_balance(self, body: DebitBalanceBody) -> JSONResponse:
         pass
 
+    @abstractmethod
+    async def get_cost_multiplier(self, request: Request, organization_id: int) -> JSONResponse:
+        pass
+
+    @abstractmethod
+    async def update_cost_multiplier(self, request: Request, body: UpdateCostMultiplierBody) -> JSONResponse:
+        pass
+
 
 class IOrganizationService(Protocol):
     @abstractmethod
@@ -91,6 +99,25 @@ class IOrganizationService(Protocol):
     async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
         pass
 
+    @abstractmethod
+    async def get_cost_multiplier_by_organization_id(self, organization_id: int) -> model.CostMultiplier:
+        pass
+
+    @abstractmethod
+    async def update_cost_multiplier(
+            self,
+            organization_id: int,
+            generate_text_cost_multiplier: float = None,
+            generate_image_cost_multiplier: float = None,
+            generate_vizard_video_cut_cost_multiplier: float = None,
+            transcribe_audio_cost_multiplier: float = None,
+    ) -> None:
+        pass
+
+    @abstractmethod
+    async def delete_cost_multiplier(self, organization_id: int) -> None:
+        pass
+
 
 class IOrganizationRepo(Protocol):
     @abstractmethod
@@ -131,4 +158,34 @@ class IOrganizationRepo(Protocol):
 
     @abstractmethod
     async def update_balance(self, organization_id: int, rub_balance: str) -> None:
+        pass
+
+    @abstractmethod
+    async def create_cost_multiplier(
+            self,
+            organization_id: int,
+            generate_text_cost_multiplier: float,
+            generate_image_cost_multiplier: float,
+            generate_vizard_video_cut_cost_multiplier: float,
+            transcribe_audio_cost_multiplier: float
+    ) -> int:
+        pass
+
+    @abstractmethod
+    async def get_cost_multiplier_by_organization_id(self, organization_id: int) -> list[model.CostMultiplier]:
+        pass
+
+    @abstractmethod
+    async def update_cost_multiplier(
+            self,
+            organization_id: int,
+            generate_text_cost_multiplier: float = None,
+            generate_image_cost_multiplier: float = None,
+            generate_vizard_video_cut_cost_multiplier: float = None,
+            transcribe_audio_cost_multiplier: float = None,
+    ) -> None:
+        pass
+
+    @abstractmethod
+    async def delete_cost_multiplier(self, organization_id: int) -> None:
         pass

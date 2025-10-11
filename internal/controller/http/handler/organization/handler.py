@@ -1,12 +1,12 @@
 from decimal import Decimal
 
-from fastapi import Request, HTTPException
+from fastapi import Request
 from fastapi.responses import JSONResponse
 
-from internal import interface
+from internal import interface, common
 from internal.controller.http.handler.organization.model import (
     CreateOrganizationBody, UpdateOrganizationBody,
-    TopUpBalanceBody, DebitBalanceBody
+    TopUpBalanceBody, DebitBalanceBody, UpdateCostMultiplierBody
 )
 from pkg.log_wrapper import auto_log
 
@@ -94,7 +94,7 @@ class OrganizationController(interface.IOrganizationController):
     async def top_up_balance(self, body: TopUpBalanceBody) -> JSONResponse:
         if body.interserver_secret_key != self.interserver_secret_key:
             self.logger.warning("Неверный межсервисный ключ для пополнения баланса")
-            raise HTTPException(status_code=403, detail="Invalid interserver secret key")
+            return JSONResponse(content={}, status_code=403)
 
         await self.organization_service.top_up_balance(
             organization_id=body.organization_id,
@@ -111,19 +111,53 @@ class OrganizationController(interface.IOrganizationController):
     @auto_log()
     @traced_method()
     async def debit_balance(self, body: DebitBalanceBody) -> JSONResponse:
-        if body.interserver_secret_key != self.interserver_secret_key:
-            self.logger.warning("Неверный межсервисный ключ для списания баланса")
-            raise HTTPException(status_code=403, detail="Invalid interserver secret key")
+        try:
+            if body.interserver_secret_key != self.interserver_secret_key:
+                self.logger.warning("Неверный межсервисный ключ для списания баланса")
+                return JSONResponse(content={}, status_code=403)
 
-        await self.organization_service.debit_balance(
+            await self.organization_service.debit_balance(
+                organization_id=body.organization_id,
+                amount_rub=Decimal(body.amount_rub)
+            )
+
+            return JSONResponse(
+                status_code=200,
+                content={
+                    "organization_id": body.organization_id,
+                    "amount_rub": body.amount_rub
+                }
+            )
+
+        except common.ErrInsufficientBalance:
+            return JSONResponse(
+                status_code=400,
+                content={
+                    "status_code": common.StatusCode.InsufficientBalance,
+                }
+            )
+
+    @auto_log()
+    @traced_method()
+    async def get_cost_multiplier(self, request: Request, organization_id: int) -> JSONResponse:
+        cost_multiplier = await self.organization_service.get_cost_multiplier_by_organization_id(organization_id)
+        return JSONResponse(
+            status_code=200,
+            content=cost_multiplier.to_dict()
+        )
+
+    @auto_log()
+    @traced_method()
+    async def update_cost_multiplier(self, request: Request, body: UpdateCostMultiplierBody) -> JSONResponse:
+        await self.organization_service.update_cost_multiplier(
             organization_id=body.organization_id,
-            amount_rub=Decimal(body.amount_rub)
+            generate_text_cost_multiplier=body.generate_text_cost_multiplier,
+            generate_image_cost_multiplier=body.generate_image_cost_multiplier,
+            generate_vizard_video_cut_cost_multiplier=body.generate_vizard_video_cut_cost_multiplier,
+            transcribe_audio_cost_multiplier=body.transcribe_audio_cost_multiplier
         )
 
         return JSONResponse(
             status_code=200,
-            content={
-                "organization_id": body.organization_id,
-                "amount_rub": body.amount_rub
-            }
+            content={}
         )
