@@ -45,6 +45,14 @@ class IOrganizationController(Protocol):
     async def debit_balance(self, body: DebitBalanceBody) -> JSONResponse:
         pass
 
+    @abstractmethod
+    async def get_cost_multiplier(self, request: Request, organization_id: int) -> JSONResponse:
+        pass
+
+    @abstractmethod
+    async def update_cost_multiplier(self, request: Request, body: UpdateCostMultiplierBody) -> JSONResponse:
+        pass
+
 
 class IOrganizationService(Protocol):
     @abstractmethod

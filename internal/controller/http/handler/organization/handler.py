@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from internal import interface, common
 from internal.controller.http.handler.organization.model import (
     CreateOrganizationBody, UpdateOrganizationBody,
-    TopUpBalanceBody, DebitBalanceBody
+    TopUpBalanceBody, DebitBalanceBody, UpdateCostMultiplierBody
 )
 from pkg.log_wrapper import auto_log
 
@@ -136,3 +136,27 @@ class OrganizationController(interface.IOrganizationController):
                     "status_code": common.StatusCode.InsufficientBalance,
                 }
             )
+
+    @auto_log()
+    @traced_method()
+    async def get_cost_multiplier(self, request: Request, organization_id: int) -> JSONResponse:
+        cost_multiplier = await self.organization_service.get_cost_multiplier_by_organization_id(organization_id)
+        return JSONResponse(
+            status_code=200,
+            content=cost_multiplier.to_dict()
+        )
+
+    @auto_log()
+    @traced_method()
+    async def update_cost_multiplier(self, request: Request, body: UpdateCostMultiplierBody) -> JSONResponse:
+        await self.organization_service.update_cost_multiplier(
+            organization_id=body.organization_id,
+            generate_text_cost_multiplier=body.generate_text_cost_multiplier,
+            generate_image_cost_multiplier=body.generate_image_cost_multiplier,
+            generate_vizard_video_cut_cost_multiplier=body.generate_vizard_video_cut_cost_multiplier
+        )
+
+        return JSONResponse(
+            status_code=200,
+            content={}
+        )

@@ -113,6 +113,25 @@ def include_organization_handlers(
         description="Списывает указанную сумму с баланса организации (требует межсервисный ключ)"
     )
 
+    # Получение cost multipliers организации
+    app.add_api_route(
+        prefix + "/cost-multiplier/{organization_id}",
+        organization_controller.get_cost_multiplier,
+        methods=["GET"],
+        tags=["Cost Multiplier"],
+        response_model=model.CostMultiplier,
+        description="Возвращает множители стоимости для различных операций организации"
+    )
+
+    # Обновление cost multipliers организации
+    app.add_api_route(
+        prefix + "/cost-multiplier",
+        organization_controller.update_cost_multiplier,
+        methods=["PUT"],
+        tags=["Cost Multiplier"],
+        description="Обновляет множители стоимости для различных операций организации"
+    )
+
 
 def include_db_handler(app: FastAPI, db: interface.IDB, prefix: str):
     app.add_api_route(
