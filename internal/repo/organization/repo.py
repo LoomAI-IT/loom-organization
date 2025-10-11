@@ -127,9 +127,9 @@ class OrganizationRepo(interface.IOrganizationRepo):
     async def create_cost_multiplier(
             self,
             organization_id: int,
-            generate_text_cost_multiplier: float = 1.0,
-            generate_image_cost_multiplier: float = 1.0,
-            generate_vizard_video_cut_cost_multiplier: float = 1.0
+            generate_text_cost_multiplier: float,
+            generate_image_cost_multiplier: float,
+            generate_vizard_video_cut_cost_multiplier: float
     ) -> int:
         args = {
             'organization_id': organization_id,
