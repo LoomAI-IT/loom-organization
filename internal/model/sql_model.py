@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS cost_multipliers (
     generate_text_cost_multiplier REAL DEFAULT 1.0,
     generate_image_cost_multiplier REAL DEFAULT 1.0,
     generate_vizard_video_cut_cost_multiplier REAL DEFAULT 1.0,
+    transcribe_audio_cost_multiplier REAL DEFAULT 1.0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """
