@@ -17,19 +17,12 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def create_organization(self, name: str) -> int:
-        organization_id = await self.organization_repo.create_organization(
-            name=name
-        )
+        organization_id = await self.organization_repo.create_organization(name)
         return organization_id
 
     @traced_method()
     async def get_organization_by_id(self, organization_id: int) -> model.Organization:
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
-        organization = organizations[0]
+        organization = (await self.organization_repo.get_organization_by_id(organization_id))[0]
         return organization
 
     @traced_method()
@@ -52,11 +45,6 @@ class OrganizationService(interface.IOrganizationService):
             locale: dict = None,
             additional_info: list[str] = None,
     ) -> None:
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
         await self.organization_repo.update_organization(
             organization_id=organization_id,
             name=name,
@@ -73,25 +61,13 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def delete_organization(self, organization_id: int) -> None:
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
         await self.organization_repo.delete_organization(organization_id)
 
     @traced_method()
     async def top_up_balance(self, organization_id: int, amount_rub: Decimal) -> None:
-        # Проверяем, что организация существует
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
-
-        organization = organizations[0]
+        organization = (await self.organization_repo.get_organization_by_id(organization_id))[0]
 
         rub_balance = organization.rub_balance + amount_rub
-
         await self.organization_repo.update_balance(
             organization_id=organization_id,
             rub_balance=str(rub_balance)
@@ -99,21 +75,13 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def debit_balance(self, organization_id: int, amount_rub: Decimal) -> None:
-        # Проверяем, что организация существует
-        organizations = await self.organization_repo.get_organization_by_id(organization_id)
-        if not organizations:
-            self.logger.warning("Организация не найдена")
-            raise common.ErrOrganizationNotFound()
+        organization = (await self.organization_repo.get_organization_by_id(organization_id))[0]
 
-        organization = organizations[0]
+        current_balance = organization.rub_balance
+        if current_balance < amount_rub:
+            raise common.ErrInsufficientBalance()
 
         rub_balance = organization.rub_balance - amount_rub
-
-        # # Проверяем, что у организации достаточно средств
-        # current_balance = organizations[0].rub_balance
-        # if current_balance < amount_rub:
-        #     raise common.ErrInsufficientBalance()
-
         await self.organization_repo.update_balance(
             organization_id=organization_id,
             rub_balance=str(rub_balance)
