@@ -47,7 +47,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
             name: str = None,
             tone_of_voice: list[str] = None,
             brand_rules: list[str] = None,
-            compliance_rules: list[str] = None,
+            compliance_rules: list[dict] = None,
             products: list[dict] = None,
             locale: dict = None,
             additional_info: list[dict] = None,
@@ -69,7 +69,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
 
         if compliance_rules is not None:
             update_fields.append("compliance_rules = :compliance_rules")
-            args['compliance_rules'] = compliance_rules
+            args['compliance_rules'] = [json.dumps(rule) for rule in compliance_rules]
 
         if products is not None:
             update_fields.append("products = :products")

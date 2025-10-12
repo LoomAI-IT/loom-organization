@@ -10,7 +10,7 @@ class UpdateOrganizationBody(BaseModel):
     name: str = None
     tone_of_voice: list[str] = None
     brand_rules: list[str] = None
-    compliance_rules: list[str] = None
+    compliance_rules: list[dict] = None
     products: list[dict] = None
     locale: dict = None
     additional_info: list[dict] = None

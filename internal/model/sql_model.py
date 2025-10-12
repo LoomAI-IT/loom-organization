@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS organizations (
 
     tone_of_voice TEXT[] DEFAULT '{}',
     brand_rules TEXT[] DEFAULT '{}',
-    compliance_rules TEXT[] DEFAULT '{}',
+    compliance_rules JSONB[] DEFAULT '{}',
     products JSONB[] DEFAULT '{}',
     locale JSONB DEFAULT '{}',
     additional_info JSONB[] DEFAULT '{}',
