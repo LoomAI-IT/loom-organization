@@ -47,7 +47,7 @@ class Organization:
             "additional_info": self.additional_info,
             "products": self.products,
             "locale": self.locale,
-            "created_at": self.created_at,
+            "created_at": self.created_at.isoformat(),
         }
 
 
