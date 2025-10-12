@@ -15,7 +15,6 @@ class UpdateOrganizationBody(BaseModel):
     locale: dict = None
     additional_info: list[dict] = None
 
-
 class TopUpBalanceBody(BaseModel):
     organization_id: int
     amount_rub: str
