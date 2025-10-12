@@ -1,19 +1,16 @@
 create_organizations_table = """
 CREATE TABLE IF NOT EXISTS organizations (
     id SERIAL PRIMARY KEY,
-    
+
     name TEXT NOT NULL,
     rub_balance TEXT DEFAULT '0',
-    video_cut_description_end_sample TEXT DEFAULT '',
-    publication_text_end_sample TEXT DEFAULT '',
-    
+
     tone_of_voice TEXT[] DEFAULT '{}',
     brand_rules TEXT[] DEFAULT '{}',
     compliance_rules TEXT[] DEFAULT '{}',
-    audience_insights TEXT[] DEFAULT '{}',
     products JSONB[] DEFAULT '{}',
     locale JSONB DEFAULT '{}',
-    additional_info TEXT[] DEFAULT '{}',
+    additional_info JSONB[] DEFAULT '{}',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 """
