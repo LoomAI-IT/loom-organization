@@ -46,7 +46,6 @@ class OrganizationRepo(interface.IOrganizationRepo):
             organization_id: int,
             name: str = None,
             tone_of_voice: list[str] = None,
-            brand_rules: list[str] = None,
             compliance_rules: list[dict] = None,
             products: list[dict] = None,
             locale: dict = None,
@@ -62,10 +61,6 @@ class OrganizationRepo(interface.IOrganizationRepo):
         if tone_of_voice is not None:
             update_fields.append("tone_of_voice = :tone_of_voice")
             args['tone_of_voice'] = tone_of_voice
-
-        if brand_rules is not None:
-            update_fields.append("brand_rules = :brand_rules")
-            args['brand_rules'] = brand_rules
 
         if compliance_rules is not None:
             update_fields.append("compliance_rules = :compliance_rules")

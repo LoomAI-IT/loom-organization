@@ -10,7 +10,6 @@ class Organization:
     rub_balance: Decimal
 
     tone_of_voice: list[str]
-    brand_rules: list[str]
     compliance_rules: list[dict]
     additional_info: list[dict]
 
@@ -26,7 +25,6 @@ class Organization:
                 name=row.name,
                 rub_balance=Decimal(str(row.rub_balance)),
                 tone_of_voice=row.tone_of_voice,
-                brand_rules=row.brand_rules,
                 compliance_rules=row.compliance_rules,
                 additional_info=row.additional_info,
                 products=row.products,
@@ -42,7 +40,6 @@ class Organization:
             "name": self.name,
             "rub_balance": str(self.rub_balance),
             "tone_of_voice": self.tone_of_voice,
-            "brand_rules": self.brand_rules,
             "compliance_rules": self.compliance_rules,
             "additional_info": self.additional_info,
             "products": self.products,

@@ -6,7 +6,6 @@ CREATE TABLE IF NOT EXISTS organizations (
     rub_balance TEXT DEFAULT '0',
 
     tone_of_voice TEXT[] DEFAULT '{}',
-    brand_rules TEXT[] DEFAULT '{}',
     compliance_rules JSONB[] DEFAULT '{}',
     products JSONB[] DEFAULT '{}',
     locale JSONB DEFAULT '{}',

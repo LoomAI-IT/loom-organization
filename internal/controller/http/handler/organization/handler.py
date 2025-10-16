@@ -65,7 +65,6 @@ class OrganizationController(interface.IOrganizationController):
             organization_id=body.organization_id,
             name=body.name,
             tone_of_voice=body.tone_of_voice,
-            brand_rules=body.brand_rules,
             compliance_rules=body.compliance_rules,
             products=body.products,
             locale=body.locale,
