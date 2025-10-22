@@ -64,6 +64,7 @@ class OrganizationController(interface.IOrganizationController):
         await self.organization_service.update_organization(
             organization_id=body.organization_id,
             name=body.name,
+            description=body.description,
             tone_of_voice=body.tone_of_voice,
             compliance_rules=body.compliance_rules,
             products=body.products,

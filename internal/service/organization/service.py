@@ -43,6 +43,7 @@ class OrganizationService(interface.IOrganizationService):
             self,
             organization_id: int,
             name: str = None,
+            description: str = None,
             tone_of_voice: list[str] = None,
             compliance_rules: list[dict] = None,
             products: list[dict] = None,
@@ -52,6 +53,7 @@ class OrganizationService(interface.IOrganizationService):
         await self.organization_repo.update_organization(
             organization_id=organization_id,
             name=name,
+            description=description,
             tone_of_voice=tone_of_voice,
             compliance_rules=compliance_rules,
             products=products,

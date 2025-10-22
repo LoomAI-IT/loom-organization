@@ -7,6 +7,7 @@ from decimal import Decimal
 class Organization:
     id: int
     name: str
+    description: str
     rub_balance: Decimal
 
     tone_of_voice: list[str]
@@ -23,6 +24,7 @@ class Organization:
             cls(
                 id=row.id,
                 name=row.name,
+                description=row.description,
                 rub_balance=Decimal(str(row.rub_balance)),
                 tone_of_voice=row.tone_of_voice,
                 compliance_rules=row.compliance_rules,
@@ -38,6 +40,7 @@ class Organization:
         return {
             "id": self.id,
             "name": self.name,
+            "description": self.description,
             "rub_balance": str(self.rub_balance),
             "tone_of_voice": self.tone_of_voice,
             "compliance_rules": self.compliance_rules,

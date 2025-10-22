@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS organizations (
     id SERIAL PRIMARY KEY,
 
     name TEXT NOT NULL,
+    description TEXT DEFAULT '',
     rub_balance TEXT DEFAULT '0',
 
     tone_of_voice TEXT[] DEFAULT '{}',
