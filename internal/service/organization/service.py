@@ -10,10 +10,12 @@ class OrganizationService(interface.IOrganizationService):
             self,
             tel: interface.ITelemetry,
             organization_repo: interface.IOrganizationRepo,
+            loom_employee_client: interface.ILoomEmployeeClient
     ):
         self.tracer = tel.tracer()
         self.logger = tel.logger()
         self.organization_repo = organization_repo
+        self.loom_employee_client = loom_employee_client
 
     @traced_method()
     async def create_organization(self, name: str) -> int:
@@ -63,6 +65,14 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def delete_organization(self, organization_id: int) -> None:
+        employees = await self.loom_employee_client.get_employees_by_organization(
+            organization_id=organization_id,
+        )
+        for employee in employees:
+            await self.loom_employee_client.delete_employee(
+                employee.account_id
+            )
+
         await self.organization_repo.delete_organization(organization_id)
 
     @traced_method()
