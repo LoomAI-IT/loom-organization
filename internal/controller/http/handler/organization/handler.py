@@ -131,6 +131,7 @@ class OrganizationController(interface.IOrganizationController):
                 status_code=400,
                 content={
                     "status_code": common.StatusCode.InsufficientBalance,
+                    "insufficient_balance": True
                 }
             )
 
