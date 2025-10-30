@@ -28,6 +28,9 @@ class OrganizationService(interface.IOrganizationService):
             generate_vizard_video_cut_cost_multiplier=3.0,
             transcribe_audio_cost_multiplier=3.0
         )
+
+        await self.organization_repo.update_balance(organization_id, "500")
+
         return organization_id
 
     @traced_method()
