@@ -41,3 +41,6 @@ class Config:
         # Настройки клиента авторизации Loom
         self.loom_authorization_host = os.getenv("LOOM_AUTHORIZATION_CONTAINER_NAME", "localhost")
         self.loom_authorization_port = int(os.getenv("LOOM_AUTHORIZATION_PORT", "8081"))
+
+        self.loom_employee_host = os.getenv("LOOM_EMPLOYEE_CONTAINER_NAME", "localhost")
+        self.loom_employee_port = int(os.getenv("LOOM_EMPLOYEE_PORT", "8081"))

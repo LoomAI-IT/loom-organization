@@ -64,12 +64,9 @@ class OrganizationController(interface.IOrganizationController):
         await self.organization_service.update_organization(
             organization_id=body.organization_id,
             name=body.name,
-            video_cut_description_end_sample=body.video_cut_description_end_sample,
-            publication_text_end_sample=body.publication_text_end_sample,
+            description=body.description,
             tone_of_voice=body.tone_of_voice,
-            brand_rules=body.brand_rules,
             compliance_rules=body.compliance_rules,
-            audience_insights=body.audience_insights,
             products=body.products,
             locale=body.locale,
             additional_info=body.additional_info
@@ -134,6 +131,7 @@ class OrganizationController(interface.IOrganizationController):
                 status_code=400,
                 content={
                     "status_code": common.StatusCode.InsufficientBalance,
+                    "insufficient_balance": True
                 }
             )
 

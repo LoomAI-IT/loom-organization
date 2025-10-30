@@ -75,15 +75,12 @@ class IOrganizationService(Protocol):
             self,
             organization_id: int,
             name: str = None,
-            video_cut_description_end_sample: str = None,
-            publication_text_end_sample: str = None,
+            description: str = None,
             tone_of_voice: list[str] = None,
-            brand_rules: list[str] = None,
-            compliance_rules: list[str] = None,
-            audience_insights: list[str] = None,
+            compliance_rules: list[dict] = None,
             products: list[dict] = None,
             locale: dict = None,
-            additional_info: list[str] = None,
+            additional_info: list[dict] = None,
     ) -> None:
         pass
 
@@ -140,15 +137,12 @@ class IOrganizationRepo(Protocol):
             self,
             organization_id: int,
             name: str = None,
-            video_cut_description_end_sample: str = None,
-            publication_text_end_sample: str = None,
+            description: str = None,
             tone_of_voice: list[str] = None,
-            brand_rules: list[str] = None,
-            compliance_rules: list[str] = None,
-            audience_insights: list[str] = None,
+            compliance_rules: list[dict] = None,
             products: list[dict] = None,
             locale: dict = None,
-            additional_info: list[str] = None,
+            additional_info: list[dict] = None,
     ) -> None:
         pass
 

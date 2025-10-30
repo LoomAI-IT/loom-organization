@@ -10,10 +10,12 @@ class OrganizationService(interface.IOrganizationService):
             self,
             tel: interface.ITelemetry,
             organization_repo: interface.IOrganizationRepo,
+            loom_employee_client: interface.ILoomEmployeeClient
     ):
         self.tracer = tel.tracer()
         self.logger = tel.logger()
         self.organization_repo = organization_repo
+        self.loom_employee_client = loom_employee_client
 
     @traced_method()
     async def create_organization(self, name: str) -> int:
@@ -26,6 +28,9 @@ class OrganizationService(interface.IOrganizationService):
             generate_vizard_video_cut_cost_multiplier=3.0,
             transcribe_audio_cost_multiplier=3.0
         )
+
+        await self.organization_repo.update_balance(organization_id, "500")
+
         return organization_id
 
     @traced_method()
@@ -43,25 +48,19 @@ class OrganizationService(interface.IOrganizationService):
             self,
             organization_id: int,
             name: str = None,
-            video_cut_description_end_sample: str = None,
-            publication_text_end_sample: str = None,
+            description: str = None,
             tone_of_voice: list[str] = None,
-            brand_rules: list[str] = None,
-            compliance_rules: list[str] = None,
-            audience_insights: list[str] = None,
+            compliance_rules: list[dict] = None,
             products: list[dict] = None,
             locale: dict = None,
-            additional_info: list[str] = None,
+            additional_info: list[dict] = None,
     ) -> None:
         await self.organization_repo.update_organization(
             organization_id=organization_id,
             name=name,
-            video_cut_description_end_sample=video_cut_description_end_sample,
-            publication_text_end_sample=publication_text_end_sample,
+            description=description,
             tone_of_voice=tone_of_voice,
-            brand_rules=brand_rules,
             compliance_rules=compliance_rules,
-            audience_insights=audience_insights,
             products=products,
             locale=locale,
             additional_info=additional_info
@@ -69,6 +68,14 @@ class OrganizationService(interface.IOrganizationService):
 
     @traced_method()
     async def delete_organization(self, organization_id: int) -> None:
+        employees = await self.loom_employee_client.get_employees_by_organization(
+            organization_id=organization_id,
+        )
+        for employee in employees:
+            await self.loom_employee_client.delete_employee(
+                employee.account_id
+            )
+
         await self.organization_repo.delete_organization(organization_id)
 
     @traced_method()

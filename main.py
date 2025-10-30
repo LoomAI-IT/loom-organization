@@ -15,6 +15,7 @@ from internal.repo.organization.repo import OrganizationRepo
 
 from internal.app.http.app import NewHTTP
 from internal.config.config import Config
+from pkg.client.internal.loom_employee.client import LoomEmployeeClient
 
 cfg = Config()
 
@@ -30,7 +31,6 @@ alert_manager = AlertManager(
     cfg.monitoring_redis_port,
     cfg.monitoring_redis_db,
     cfg.monitoring_redis_password,
-    cfg.openai_api_key
 )
 
 tel = Telemetry(
@@ -56,6 +56,13 @@ loom_authorization_client = LoomAuthorizationClient(
     log_context=log_context
 )
 
+loom_employee_client = LoomEmployeeClient(
+    tel=tel,
+    host=cfg.loom_employee_host,
+    port=cfg.loom_employee_port,
+    log_context=log_context
+)
+
 # Инициализация репозиториев
 organization_repo = OrganizationRepo(tel, db)
 
@@ -63,6 +70,7 @@ organization_repo = OrganizationRepo(tel, db)
 organization_service = OrganizationService(
     tel=tel,
     organization_repo=organization_repo,
+    loom_employee_client=loom_employee_client
 )
 
 # Инициализация контроллеров
