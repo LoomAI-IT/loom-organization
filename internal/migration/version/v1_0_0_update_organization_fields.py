@@ -6,7 +6,7 @@ class UpdateOrganizationFieldsMigration(Migration):
 
     def get_info(self) -> MigrationInfo:
         return MigrationInfo(
-            version="v0_0_13",
+            version="v1_0_0",
             name="update_organization_fields",
             depends_on="v0_0_12"
         )
@@ -35,28 +35,14 @@ class UpdateOrganizationFieldsMigration(Migration):
 
 convert_compliance_rules_to_jsonb = """
 ALTER TABLE organizations
-    ALTER COLUMN compliance_rules TYPE JSONB[]
-    USING CASE
-        WHEN compliance_rules IS NULL THEN '{}'::JSONB[]
-        WHEN array_length(compliance_rules, 1) IS NULL THEN '{}'::JSONB[]
-        ELSE (
-            SELECT array_agg(to_jsonb(elem))
-            FROM unnest(compliance_rules) AS elem
-        )
-    END;
+    DROP COLUMN IF EXISTS compliance_rules,
+    ADD COLUMN compliance_rules JSONB[] DEFAULT '{}';
 """
 
 convert_additional_info_to_jsonb = """
 ALTER TABLE organizations
-    ALTER COLUMN additional_info TYPE JSONB[]
-    USING CASE
-        WHEN additional_info IS NULL THEN '{}'::JSONB[]
-        WHEN array_length(additional_info, 1) IS NULL THEN '{}'::JSONB[]
-        ELSE (
-            SELECT array_agg(to_jsonb(elem))
-            FROM unnest(additional_info) AS elem
-        )
-    END;
+    DROP COLUMN IF EXISTS additional_info,
+    ADD COLUMN additional_info JSONB[] DEFAULT '{}';
 """
 
 add_description_field = """
@@ -89,26 +75,12 @@ ALTER TABLE organizations
 
 convert_compliance_rules_to_text_array = """
 ALTER TABLE organizations
-    ALTER COLUMN compliance_rules TYPE TEXT[]
-    USING CASE
-        WHEN compliance_rules IS NULL THEN '{}'::TEXT[]
-        WHEN array_length(compliance_rules, 1) IS NULL THEN '{}'::TEXT[]
-        ELSE (
-            SELECT array_agg(elem::TEXT)
-            FROM unnest(compliance_rules) AS elem
-        )
-    END;
+    DROP COLUMN IF EXISTS compliance_rules,
+    ADD COLUMN compliance_rules TEXT[] DEFAULT '{}';
 """
 
 convert_additional_info_to_text_array = """
 ALTER TABLE organizations
-    ALTER COLUMN additional_info TYPE TEXT[]
-    USING CASE
-        WHEN additional_info IS NULL THEN '{}'::TEXT[]
-        WHEN array_length(additional_info, 1) IS NULL THEN '{}'::TEXT[]
-        ELSE (
-            SELECT array_agg(elem::TEXT)
-            FROM unnest(additional_info) AS elem
-        )
-    END;
+    DROP COLUMN IF EXISTS additional_info,
+    ADD COLUMN additional_info TEXT[] DEFAULT '{}';
 """
