@@ -84,6 +84,7 @@ app = NewHTTP(
     organization_controller=organization_controller,
     http_middleware=http_middleware,
     prefix=cfg.prefix,
+    environment=cfg.environment
 )
 
 if __name__ == "__main__":
