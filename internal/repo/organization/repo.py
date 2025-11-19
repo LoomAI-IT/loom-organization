@@ -59,7 +59,7 @@ class OrganizationRepo(interface.IOrganizationRepo):
             update_fields.append("name = :name")
             args['name'] = name
 
-        if name is not None:
+        if description is not None:
             update_fields.append("description = :description")
             args['description'] = description
 
